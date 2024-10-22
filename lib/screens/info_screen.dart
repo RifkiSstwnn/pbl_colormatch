@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'detail_info_screen.dart';
 
 class InfoScreen extends StatelessWidget {
+  const InfoScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Info'),
+        title: const Text('Info'),
       ),
       body: ListView(
         children: [
@@ -45,7 +47,7 @@ class InfoScreen extends StatelessWidget {
         child: Icon(icon),
       ),
       title: Text(title),
-      trailing: Icon(Icons.arrow_forward),
+      trailing: const Icon(Icons.arrow_forward),
       onTap: () {
         // Navigasi ke halaman detail
         Navigator.push(
