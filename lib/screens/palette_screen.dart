@@ -54,7 +54,7 @@ class PaletteScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'Find Your Color',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.orange), // Gaya judul sesuai SkinToneDetailScreen
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.orange),
         ),
       ),
       body: ListView(
@@ -69,9 +69,16 @@ class PaletteScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // Gambar orang dengan skin tone sesuai musim
-                  CircleAvatar(
-                    radius: 40,
-                    backgroundImage: AssetImage('assets/images/${entry.key.toLowerCase()}.jpg'), // Pastikan path gambar ada di assets
+                  Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(40),
+                      image: DecorationImage(
+                        image: AssetImage('assets/images/${entry.key.toLowerCase()}.jpg'), // Pastikan path gambar ada di assets
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
                   const SizedBox(width: 20),
                   GestureDetector(
