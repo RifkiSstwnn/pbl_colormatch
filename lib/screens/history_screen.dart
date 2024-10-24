@@ -24,8 +24,11 @@ class HistoryScreen extends StatelessWidget {
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
+                // Nama pengguna yang akan ditampilkan
+                final String users = 'Alice';
+
                 return Container(
-                  height: 120, // Tinggi container
+                  height: 140, // Tinggi container diperbesar
                   margin: EdgeInsets.symmetric(
                       vertical: 5, horizontal: 20), // Margin untuk jarak
                   decoration: BoxDecoration(
@@ -40,33 +43,80 @@ class HistoryScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: Row(
+                  child: Stack(
                     children: [
-                      // Menggunakan Icon sebagai pengganti gambar
-                      SizedBox(width: 10), // Menambahkan margin kiri 5px
-                      ClipOval(
-                        child: Container(
-                          color: Colors.blue, // Warna latar belakang untuk ikon
-                          child: Icon(
-                            Icons.person, // Ikon profil
-                            color: Colors.white, // Warna ikon
-                            size: 30, // Ukuran ikon
-                          ),
-                          width: 50,
-                          height: 50,
+                      Positioned(
+                        left: 60, // Mengatur posisi left sebesar 80
+                        top:
+                            20, // Mengatur posisi top untuk menyesuaikan vertikal
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ClipOval(
+                              child: Image.asset(
+                                'history.jpg', // Path ke gambar
+                                width: 70,
+                                height: 70,
+                                fit: BoxFit
+                                    .cover, // Agar gambar menyesuaikan lingkaran
+                              ),
+                            ),
+                            SizedBox(height: 8), // Jarak antara gambar dan teks
+                            Text(
+                              users, // Nama pengguna di bawah gambar
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          ],
                         ),
                       ),
-                      SizedBox(width: 15), // Jarak antara gambar dan teks
-                      // Mengganti teks dengan menambahkan Spring
-                      Text(
-                        index == 0
-                            ? 'Summer'
-                            : index == 1
-                                ? 'Autumn'
-                                : index == 2
-                                    ? 'Winter'
-                                    : 'Spring',
-                        style: TextStyle(fontSize: 16), // Ukuran teks
+                      Positioned(
+                        right: 60, // Jarak dari kanan
+                        top: 30, // Jarak dari atas
+                        child: Column(
+                          children: [
+                            Text(
+                              index == 0
+                                  ? 'Summer'
+                                  : index == 1
+                                      ? 'Autumn'
+                                      : index == 2
+                                          ? 'Winter'
+                                          : 'Spring',
+                              style: TextStyle(
+                                  fontSize: 25, fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(height: 8), // Jarak antara teks dan gambar
+                            if (index == 0)
+                              Image.asset(
+                                'history-summer.png', // Path gambar untuk Summer
+                                width: 250,
+                                height: 35,
+                                fit: BoxFit.cover,
+                              ),
+                            if (index == 1)
+                              Image.asset(
+                                'history-autumn.png', // Path gambar untuk Autumn
+                                width: 255,
+                                height: 35,
+                                fit: BoxFit.cover,
+                              ),
+                            if (index == 2)
+                              Image.asset(
+                                'history-winter.png', // Path gambar untuk Winter
+                                width: 253,
+                                height: 35,
+                                fit: BoxFit.cover,
+                              ),
+                            if (index == 3)
+                              Image.asset(
+                                'history-spring.png', // Path gambar untuk Spring
+                                width: 253,
+                                height: 35,
+                                fit: BoxFit.cover,
+                              ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
