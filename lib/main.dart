@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pbl_colormatch/screens/home_screen.dart';
-import 'screens/splash_screen.dart';
 import 'screens/welcome_screen.dart';
 
 void main() {
