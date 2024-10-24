@@ -62,10 +62,13 @@ class _CameraScreenState extends State<CameraScreen> {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
+                    crossAxisAlignment:
+                        CrossAxisAlignment.start, // Atur alignment teks
                     children: [
                       Container(
-                        width: 200, // Lebar gambar
-                        height: 200, // Tinggi gambar
+                        width: MediaQuery.of(context).size.width *
+                            0.35, // Sesuaikan lebar gambar berdasarkan lebar layar
+                        height: 150, // Kurangi tinggi gambar
                         decoration: BoxDecoration(
                           borderRadius:
                               BorderRadius.circular(10), // Sudut membulat
@@ -79,6 +82,7 @@ class _CameraScreenState extends State<CameraScreen> {
                       ),
                       SizedBox(width: 16), // Jarak antara gambar dan teks
                       Expanded(
+                        // Gunakan Expanded untuk teks agar tidak overflow
                         child: Text(
                           caption!, // Teks keterangan
                           textAlign: TextAlign.left,
@@ -104,8 +108,8 @@ class _CameraScreenState extends State<CameraScreen> {
               icon: Icon(Icons.camera_alt), // Ikon kamera
               label: Text('Buka Kamera'),
               style: ElevatedButton.styleFrom(
-                minimumSize: Size(150, 60), // Lebar dan tinggi tombol
-                textStyle: TextStyle(fontSize: 18), // Ukuran teks tombol
+                minimumSize: Size(100, 60), // Lebar dan tinggi tombol
+                textStyle: TextStyle(fontSize: 16), // Ukuran teks tombol
               ),
             ),
             ElevatedButton.icon(
@@ -113,8 +117,8 @@ class _CameraScreenState extends State<CameraScreen> {
               icon: Icon(Icons.photo_library), // Ikon galeri
               label: Text('Pilih dari Galeri'),
               style: ElevatedButton.styleFrom(
-                minimumSize: Size(150, 60), // Lebar dan tinggi tombol
-                textStyle: TextStyle(fontSize: 18), // Ukuran teks tombol
+                minimumSize: Size(100, 60), // Lebar dan tinggi tombol
+                textStyle: TextStyle(fontSize: 16), // Ukuran teks tombol
               ),
             ),
           ],

@@ -74,8 +74,9 @@ class InfoScreen extends StatelessWidget {
       padding:
           const EdgeInsets.symmetric(horizontal: 10), // Padding kanan dan kiri
       child: Card(
-        elevation: 5, // Tambahkan bayangan pada kartu
-        margin: EdgeInsets.all(7), // Menghapus margin pada kartu
+        elevation: 0,
+        color: const Color.fromARGB(255, 245, 245, 245),
+        margin: EdgeInsets.all(6), // Menghapus margin pada kartu
         shape: RoundedRectangleBorder(
           borderRadius:
               BorderRadius.circular(10), // Buat sudut kartu menjadi bulat
@@ -126,7 +127,7 @@ class InfoScreen extends StatelessWidget {
               BorderRadius.circular(10), // Sudut membulat untuk gambar
           child: FittedBox(
             fit: BoxFit.cover, // Mengatur cara gambar ditampilkan
-            child: Image.asset('assets/info.jpg'), // Gambar dari assets
+            child: Image.asset('assets/info.png'), // Gambar dari assets
           ),
         ),
       ),

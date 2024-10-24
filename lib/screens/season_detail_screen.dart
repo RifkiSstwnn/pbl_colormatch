@@ -7,14 +7,17 @@ class SkinToneDetailScreen extends StatelessWidget {
   final List<Color> eyeColors;
   final List<Color> eyebrowColors;
   final List<Color> bestColors;
+  final String imagePath; // Add image path parameter
 
-  const SkinToneDetailScreen({super.key, 
+  const SkinToneDetailScreen({
+    super.key,
     required this.season,
     required this.description, // Tambahkan parameter ini
     required this.skinColors,
     required this.eyeColors,
     required this.eyebrowColors,
     required this.bestColors,
+    required this.imagePath, // Add image path parameter
   });
 
   @override
@@ -23,44 +26,65 @@ class SkinToneDetailScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Skin Tone Details'),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
+        // Wrap the Column with SingleChildScrollView
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Title
-            Text(
-              season,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.orange),
-            ),
             const SizedBox(height: 10),
+
+            // Display the image with rounded corners
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10), // Rounded corners
+              child: Image.asset(
+                imagePath,
+                fit: BoxFit.cover, // Adjust the image to cover the space
+              ),
+            ),
+            const SizedBox(height: 10), // Space between image and description
+
             Text(
               description, // Tampilkan deskripsi di sini
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 20),
-            
-            // Section for Skin
-            _buildSectionTitle('Skin'),
-            _buildColorRow(skinColors),
 
-            const SizedBox(height: 20),
+            // Container with rounded corners for color sections
+            Container(
+              // decoration: BoxDecoration(
+              //   color: Colors.grey[200], // Background color
+              //   borderRadius: BorderRadius.circular(10), // Rounded corners
+              // ),
+              padding:
+                  const EdgeInsets.all(20.0), // Padding inside the container
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Section for Skin
+                  _buildSectionTitle('Skin'),
+                  _buildColorRow(skinColors),
 
-            // Section for Eyes
-            _buildSectionTitle('Eyes'),
-            _buildColorRow(eyeColors),
+                  const SizedBox(height: 20),
 
-            const SizedBox(height: 20),
+                  // Section for Eyes
+                  _buildSectionTitle('Eyes'),
+                  _buildColorRow(eyeColors),
 
-            // Section for eyebrow
-            _buildSectionTitle('Eyebrow'),
-            _buildColorRow(eyebrowColors),
+                  const SizedBox(height: 20),
 
-            const SizedBox(height: 20),
+                  // Section for Eyebrow
+                  _buildSectionTitle('Eyebrow'),
+                  _buildColorRow(eyebrowColors),
 
-            // Section for Best Colors (Outfit)
-            _buildSectionTitle('Best Color (Outfit)'),
-            _buildColorRow(bestColors),
+                  const SizedBox(height: 20),
+
+                  // Section for Best Colors (Outfit)
+                  _buildSectionTitle('Best Color (Outfit)'),
+                  _buildColorRow(bestColors),
+                ],
+              ),
+            ),
 
             const SizedBox(height: 20),
             Text(
@@ -83,23 +107,19 @@ class SkinToneDetailScreen extends StatelessWidget {
 
   // Method to build a row of circular color boxes with border
   Widget _buildColorRow(List<Color> colors) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start, // Mengubah ke start untuk penempatan di kiri
+    return Wrap(
+      spacing: 10, // Space between colors
+      runSpacing: 10, // Space between rows
       children: List.generate(colors.length, (index) {
-        return Row(
-          children: [
-            Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                color: colors[index],
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.black, width: 2), // Menambahkan border hitam
-              ),
-            ),
-            // Menambahkan jarak antara warna
-            if (index < colors.length - 1) const SizedBox(width: 10), // Jarak 10 piksel
-          ],
+        return Container(
+          width: 50,
+          height: 50,
+          decoration: BoxDecoration(
+            color: colors[index],
+            shape: BoxShape.circle,
+            border: Border.all(
+                color: Colors.black, width: 2), // Menambahkan border hitam
+          ),
         );
       }),
     );
