@@ -11,7 +11,7 @@ class PaletteScreen extends StatelessWidget {
       'Spring': {
         'skinColors': [const Color(0xFFF8E8D0), const Color(0xFFD2B49C), const Color(0xFF8D5524)],
         'eyeColors': [const Color(0xFF3E2C1C), const Color(0xFF8B4513)],
-        'hairColors': [const Color(0xFFCD853F), const Color(0xFF8B4513), const Color(0xFF3E2C1C)],
+        'eyebrowColors': [const Color(0xFFCD853F), const Color(0xFF8B4513), const Color(0xFF3E2C1C)],
         'bestColors': [
           const Color(0xFFE6AC27), const Color(0xFF4682B4), const Color(0xFF8A2BE2), const Color(0xFF006400),
           const Color(0xFFD2691E), const Color(0xFF32CD32), const Color(0xFF4682B4), const Color(0xFF6A5ACD),
@@ -21,7 +21,7 @@ class PaletteScreen extends StatelessWidget {
       'Summer': {
         'skinColors': [const Color(0xFFF8E8D0), const Color(0xFFD2B49C), const Color(0xFF8D5524)],
         'eyeColors': [const Color(0xFF3E2C1C), const Color(0xFF8B4513)],
-        'hairColors': [const Color(0xFFCD853F), const Color(0xFF8B4513), const Color(0xFF3E2C1C)],
+        'eyebrowColors': [const Color(0xFFCD853F), const Color(0xFF8B4513), const Color(0xFF3E2C1C)],
         'bestColors': [
           const Color(0xFFE6AC27), const Color(0xFF4682B4), const Color(0xFF8A2BE2), const Color(0xFF006400),
           const Color(0xFFD2691E), const Color(0xFF32CD32), const Color(0xFF4682B4), const Color(0xFF6A5ACD),
@@ -31,7 +31,7 @@ class PaletteScreen extends StatelessWidget {
       'Autumn': {
         'skinColors': [const Color(0xFFF8E8D0), const Color(0xFFD2B49C), const Color(0xFF8D5524)],
         'eyeColors': [const Color(0xFF3E2C1C), const Color(0xFF8B4513)],
-        'hairColors': [const Color(0xFFCD853F), const Color(0xFF8B4513), const Color(0xFF3E2C1C)],
+        'eyebrowColors': [const Color(0xFFCD853F), const Color(0xFF8B4513), const Color(0xFF3E2C1C)],
         'bestColors': [
           const Color(0xFFE6AC27), const Color(0xFF4682B4), const Color(0xFF8A2BE2), const Color(0xFF006400),
           const Color(0xFFD2691E), const Color(0xFF32CD32), const Color(0xFF4682B4), const Color(0xFF6A5ACD),
@@ -41,7 +41,7 @@ class PaletteScreen extends StatelessWidget {
       'Winter': {
         'skinColors': [const Color(0xFFF8E8D0), const Color(0xFFD2B49C), const Color(0xFF8D5524)],
         'eyeColors': [const Color(0xFF3E2C1C), const Color(0xFF8B4513)],
-        'hairColors': [const Color(0xFFCD853F), const Color(0xFF8B4513), const Color(0xFF3E2C1C)],
+        'eyebrowColors': [const Color(0xFFCD853F), const Color(0xFF8B4513), const Color(0xFF3E2C1C)],
         'bestColors': [
           const Color(0xFFE6AC27), const Color(0xFF4682B4), const Color(0xFF8A2BE2), const Color(0xFF006400),
           const Color(0xFFD2691E), const Color(0xFF32CD32), const Color(0xFF4682B4), const Color(0xFF6A5ACD),
@@ -71,7 +71,7 @@ class PaletteScreen extends StatelessWidget {
                     description: entry.value['description'], // Kirim deskripsi
                     skinColors: entry.value['skinColors']!,
                     eyeColors: entry.value['eyeColors']!,
-                    hairColors: entry.value['hairColors']!,
+                    eyebrowColors: entry.value['eyebrowColors']!,
                     bestColors: entry.value['bestColors']!,
                   ),
                 ),

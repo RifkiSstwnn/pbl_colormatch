@@ -5,7 +5,7 @@ class SkinToneDetailScreen extends StatelessWidget {
   final String description; // Parameter deskripsi
   final List<Color> skinColors;
   final List<Color> eyeColors;
-  final List<Color> hairColors;
+  final List<Color> eyebrowColors;
   final List<Color> bestColors;
 
   const SkinToneDetailScreen({super.key, 
@@ -13,7 +13,7 @@ class SkinToneDetailScreen extends StatelessWidget {
     required this.description, // Tambahkan parameter ini
     required this.skinColors,
     required this.eyeColors,
-    required this.hairColors,
+    required this.eyebrowColors,
     required this.bestColors,
   });
 
@@ -52,9 +52,9 @@ class SkinToneDetailScreen extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            // Section for Hair
-            _buildSectionTitle('Hair'),
-            _buildColorRow(hairColors),
+            // Section for eyebrow
+            _buildSectionTitle('Eyebrow'),
+            _buildColorRow(eyebrowColors),
 
             const SizedBox(height: 20),
 
