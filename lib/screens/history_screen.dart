@@ -21,6 +21,9 @@ class HistoryScreen extends StatelessWidget {
             pinned: false, // AppBar tidak tetap terlihat saat digulir
             elevation: 0, // Hilangkan bayangan
           ),
+          SliverToBoxAdapter(
+            child: _buildImageContainer(), // Place image container here
+          ),
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
@@ -32,15 +35,15 @@ class HistoryScreen extends StatelessWidget {
                   margin: EdgeInsets.symmetric(
                       vertical: 5, horizontal: 20), // Margin untuk jarak
                   decoration: BoxDecoration(
-                    color: Colors.white, // Warna latar belakang
+                    color: const Color.fromARGB(255, 245, 245, 245),
                     borderRadius: BorderRadius.circular(10), // Rounded corners
                     boxShadow: [
-                      BoxShadow(
-                        color:
-                            const Color.fromARGB(255, 5, 5, 5).withOpacity(0.2),
-                        blurRadius: 5,
-                        offset: Offset(0, 3), // Posisi bayangan
-                      ),
+                      // BoxShadow(
+                      //   color:
+                      //       const Color.fromARGB(255, 5, 5, 5).withOpacity(0.2),
+                      //   blurRadius: 5,
+                      //   offset: Offset(0, 3), // Posisi bayangan
+                      // ),
                     ],
                   ),
                   child: Stack(
@@ -126,6 +129,27 @@ class HistoryScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildImageContainer() {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Container(
+        width: double.infinity, // Lebar penuh
+        height: 155, // Tinggi tetap untuk gambar
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10), // Sudut membulat
+        ),
+        child: ClipRRect(
+          borderRadius:
+              BorderRadius.circular(10), // Sudut membulat untuk gambar
+          child: FittedBox(
+            fit: BoxFit.cover, // Mengatur cara gambar ditampilkan
+            child: Image.asset('assets/hist.png'), // Gambar dari assets
+          ),
+        ),
       ),
     );
   }
