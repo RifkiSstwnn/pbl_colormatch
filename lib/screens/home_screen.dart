@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'info_screen.dart';
 import 'camera_screen.dart';
+import 'palette_screen.dart';
 import 'history_screen.dart'; // Impor HistoryScreen
 
 class HomePage extends StatefulWidget {
@@ -13,7 +14,7 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _pages = [
     HistoryScreen(),
     CameraScreen(),
-    Placeholder(),
+    PaletteScreen(),
     InfoScreen(),
   ]; // Tambahkan HistoryScreen
 
