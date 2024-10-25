@@ -31,7 +31,7 @@ class PaletteScreen extends StatelessWidget {
           const Color(0xFF6A5ACD),
         ],
         'description':
-            'This skin tone typically has a warm and bright undertone, perfect for showcasing lively colors.',
+            'Warna kulit ini biasanya memiliki undertone yang hangat dan cerah, sempurna untuk menampilkan warna-warna yang hidup.',
         'imagePath': 'assets/spring.png', // Add image path
       },
       'Summer': {
@@ -57,7 +57,7 @@ class PaletteScreen extends StatelessWidget {
           const Color(0xFF6A5ACD),
         ],
         'description':
-            'This skin tone is usually cool and soft, harmonizing with pastel and muted shades.',
+            'Warna kulit ini biasanya sejuk dan lembut, selaras dengan warna pastel dan lembut.',
         'imagePath': 'assets/summer.png', // Add image path
       },
       'Autumn': {
@@ -83,7 +83,7 @@ class PaletteScreen extends StatelessWidget {
           const Color(0xFF6A5ACD),
         ],
         'description':
-            'This skin tone features rich and warm undertones, ideal for earthy and vibrant colors.',
+            'Warna kulit ini memiliki undertone yang kaya dan hangat, ideal untuk warna bumi dan warna-warna cerah.',
         'imagePath': 'assets/autumn.png', // Add image path
       },
       'Winter': {
@@ -109,7 +109,7 @@ class PaletteScreen extends StatelessWidget {
           const Color(0xFF6A5ACD),
         ],
         'description':
-            'This skin tone often has a cool and crisp undertone, complemented by bold and striking colors.',
+            'Warna kulit ini sering memiliki undertone yang sejuk dan segar, yang cocok dengan warna-warna berani dan mencolok.',
         'imagePath': 'assets/winter.png', // Add image path
       },
     };
