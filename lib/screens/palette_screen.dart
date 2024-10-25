@@ -213,7 +213,7 @@ class PaletteScreen extends StatelessWidget {
       padding: const EdgeInsets.all(10.0),
       child: Container(
         width: double.infinity, // Full width
-        height: 200, // Fixed height for image
+        height: 178, // Fixed height for image
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10), // Rounded corners
         ),
