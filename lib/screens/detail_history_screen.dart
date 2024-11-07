@@ -24,7 +24,7 @@ class DetailHistoryScreen extends StatelessWidget {
           children: [
             SizedBox(height: 20), // Spacer from the top
             Image.asset(
-              'history-wraped.png', // Image displayed
+              'assets/history-wraped.png', // Image displayed
               width: 150,
               height: 230,
               fit: BoxFit.cover,
