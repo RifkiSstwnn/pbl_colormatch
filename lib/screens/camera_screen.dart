@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:camera/camera.dart';
+
+import 'camera/takepicture_screen.dart';
 
 class CameraScreen extends StatefulWidget {
   @override
@@ -15,8 +18,20 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   Future<void> _takePicture() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
-    // Handle file (misalnya, menampilkan gambar yang diambil)
+    try {
+      // Get the list of available cameras
+      final cameras = await availableCameras();
+      final firstCamera = cameras.first;
+
+      // Navigate to TakePictureScreen with the selected camera
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => TakePictureScreen(camera: firstCamera),
+        ),
+      );
+    } catch (e) {
+      print('Error: $e');
+    }
   }
 
   final List<Map<String, String>> _imageList = [
