@@ -18,61 +18,68 @@ class TakePictureScreen extends StatefulWidget {
 class _TakePictureScreenState extends State<TakePictureScreen> {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
-  List<CameraDescription>? _cameras;
-  int _selectedCameraIndex = 0;
   late FaceDetector _faceDetector;
+  bool _isFrontCamera = false;
 
   @override
   void initState() {
     super.initState();
-    _initializeCameras();
+    _initializeCamera();
     _faceDetector = GoogleMlKit.vision.faceDetector();
   }
 
-  Future<void> _initializeCameras() async {
-    _cameras = await availableCameras();
-    if (_cameras!.isNotEmpty) {
-      _selectedCameraIndex = _cameras!.indexOf(widget.camera);
-      _initializeCamera(_cameras![_selectedCameraIndex]);
+  Future<void> _initializeCamera() async {
+    try {
+      // Initialize the camera controller with the selected camera
+      _controller = CameraController(
+        widget.camera,
+        ResolutionPreset.high,
+      );
+      _initializeControllerFuture = _controller.initialize();
+      _isFrontCamera = widget.camera.lensDirection == CameraLensDirection.front;
+
+      // Notify that the state has changed to rebuild the widget
+      setState(() {});
+    } catch (e) {
+      // Log error and show appropriate error message
+      print("Camera initialization error: $e");
     }
   }
 
-  void _initializeCamera(CameraDescription cameraDescription) {
-    _controller = CameraController(
-      cameraDescription,
-      ResolutionPreset.high,
-    );
-    _initializeControllerFuture = _controller.initialize();
-    setState(() {});
-  }
+  void _toggleCamera() async {
+    // Dispose of the current controller before switching cameras
+    await _controller.dispose();
 
-  void _toggleCamera() {
-    if (_cameras != null && _cameras!.length > 1) {
-      if (_controller.description.lensDirection == CameraLensDirection.front) {
-        _selectedCameraIndex = _cameras!.indexWhere(
-          (camera) => camera.lensDirection == CameraLensDirection.back,
-        );
-      } else {
-        _selectedCameraIndex = _cameras!.indexWhere(
-          (camera) => camera.lensDirection == CameraLensDirection.front,
-        );
-      }
-      _controller.dispose().then((_) {
-        _initializeCamera(_cameras![_selectedCameraIndex]);
-      });
-    }
+    // Retrieve the list of available cameras
+    final cameras = await availableCameras();
+
+    // Toggle between the front and back cameras
+    final newCamera = _isFrontCamera
+        ? cameras.firstWhere(
+            (camera) => camera.lensDirection == CameraLensDirection.back,
+          )
+        : cameras.firstWhere(
+            (camera) => camera.lensDirection == CameraLensDirection.front,
+          );
+
+    // Update the state with the new camera and initialize the controller
+    setState(() {
+      _isFrontCamera = !_isFrontCamera;
+      _controller = CameraController(
+        newCamera,
+        ResolutionPreset.high,
+      );
+      _initializeControllerFuture = _controller.initialize();
+    });
   }
 
   Future<void> _takePicture() async {
     try {
       await _initializeControllerFuture;
 
-      // Check if it's the front camera
-      if (_controller.description.lensDirection == CameraLensDirection.front) {
-        // Set max brightness for front camera flash effect
+      if (_isFrontCamera) {
         await ScreenBrightness().setScreenBrightness(1.0);
 
-        // Display overlay for a flash effect
         showDialog(
           context: context,
           barrierDismissible: false,
@@ -84,35 +91,26 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
           ),
         );
 
-        // Wait for a brief moment with the overlay flash active
         await Future.delayed(Duration(milliseconds: 100));
-
-        // Capture image while flash overlay is still active
         final image = await _controller.takePicture();
-
-        // Close the overlay flash effect
         Navigator.of(context).pop();
-
-        // Reset brightness
         await ScreenBrightness().resetScreenBrightness();
 
-        // Detect faces in the image
         final inputImage = InputImage.fromFilePath(image.path);
         final faces = await _faceDetector.processImage(inputImage);
 
-        // Check if a face is detected
         if (faces.isEmpty) {
           _showFaceNotDetectedDialog();
         } else {
-          // Check if face is within the mask area (for simplicity, we'll check the face position)
           final face = faces.first;
           if (_isFaceInMaskArea(face.boundingBox)) {
-            // Proceed to display picture screen
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) =>
-                    DisplayPictureScreen(imagePath: image.path),
+                builder: (context) => DisplayPictureScreen(
+                  imagePath: image.path,
+                  isFrontCamera: _isFrontCamera,
+                ),
               ),
             );
           } else {
@@ -120,34 +118,26 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
           }
         }
       } else {
-        // Use back camera with flash mode always for the photo
         await _controller.setFlashMode(FlashMode.torch);
-
-        // Add a slight delay to ensure the flash triggers before capturing the picture
         await Future.delayed(Duration(milliseconds: 100));
-
         final image = await _controller.takePicture();
-
-        // Turn off the flash after taking the picture
         await _controller.setFlashMode(FlashMode.off);
 
-        // Detect faces in the image
         final inputImage = InputImage.fromFilePath(image.path);
         final faces = await _faceDetector.processImage(inputImage);
 
-        // Check if a face is detected
         if (faces.isEmpty) {
           _showFaceNotDetectedDialog();
         } else {
-          // Check if face is within the mask area (for simplicity, we'll check the face position)
           final face = faces.first;
           if (_isFaceInMaskArea(face.boundingBox)) {
-            // Proceed to display picture screen
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) =>
-                    DisplayPictureScreen(imagePath: image.path),
+                builder: (context) => DisplayPictureScreen(
+                  imagePath: image.path,
+                  isFrontCamera: _isFrontCamera,
+                ),
               ),
             );
           } else {
@@ -161,9 +151,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
   }
 
   bool _isFaceInMaskArea(Rect faceBoundingBox) {
-    // Define mask area (a simple example, you can modify this to match your mask area)
-    const maskArea = Rect.fromLTWH(100, 200, 200, 300); // Example mask area
-
+    const maskArea = Rect.fromLTWH(100, 200, 200, 300);
     return maskArea.overlaps(faceBoundingBox);
   }
 
@@ -229,6 +217,8 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 return CameraPreview(_controller);
+              } else if (snapshot.hasError) {
+                return Center(child: Text("Error initializing camera"));
               } else {
                 return Center(child: CircularProgressIndicator());
               }
@@ -252,7 +242,6 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
   }
 }
 
-// Custom Clipper for the Oval Cutout
 class OvalClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
