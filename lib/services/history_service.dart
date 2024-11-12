@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:pbl_colormatch/utils/getUUID.dart'; // Import UUIDService
 
 class HistoryService {
-  final String baseUrl = 'http://192.168.59.203:5000'; // URL dasar untuk API
+  final String baseUrl = 'http://192.168.18.20:5000'; // URL dasar untuk API
   final UUIDService uuidService = UUIDService(); // Instance dari UUIDService
 
   Future<List<dynamic>?> getHistory() async {
@@ -25,5 +25,34 @@ class HistoryService {
       return null;
     }
   }
-}
 
+  Future<bool> editName(int id, String newName) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl/history/edit_name/$id'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({'name': newName}),
+    );
+
+    if (response.statusCode == 200) {
+      return true; // Berhasil mengupdate nama
+    } else {
+      print("Failed to update name: ${response.statusCode}");
+      return false; // Gagal mengupdate nama
+    }
+  }
+
+  // Menambahkan metode untuk menghapus history
+  Future<bool> deleteHistory(int id) async {
+    final response = await http.delete(
+      Uri.parse('$baseUrl/history/delete/$id'),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      return true; // Berhasil menghapus history
+    } else {
+      print("Failed to delete history: ${response.statusCode}");
+      return false; // Gagal menghapus history
+    }
+  }
+}

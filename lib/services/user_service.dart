@@ -18,9 +18,9 @@ class User {
 // Service untuk menambahkan dan memeriksa user
 class UserService {
   final String addUserUrl =
-      'http://192.168.59.203:5000/add_user'; // Ganti dengan URL endpoint Flask
+      'http://192.168.18.20:5000/add_user'; // Ganti dengan URL endpoint Flask
   final String cekUserUrl =
-      'http://192.168.59.203:5000/cek_user'; // Ganti dengan URL endpoint Flask
+      'http://192.168.18.20:5000/cek_user'; // Ganti dengan URL endpoint Flask
 
   // Fungsi untuk menambahkan user baru
   Future<void> addUser(User user) async {
