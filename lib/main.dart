@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'screens/home_screen.dart';
-// Import screen lainnya sesuai kebutuhan
+import 'services/user_service.dart'; // Import UserService
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,27 +55,33 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _checkAndGenerateUUID() async {
     try {
-      await Future.delayed(const Duration(seconds: 2)); // Delay untuk splash screen
-      
+      await Future.delayed(
+          const Duration(seconds: 2)); // Delay untuk splash screen
+
       if (!mounted) return;
 
       final prefs = await SharedPreferences.getInstance();
       String? uuid = prefs.getString('userUUID');
+
+      UserService userService = UserService();
 
       if (uuid == null) {
         // Generate UUID jika belum ada
         uuid = const Uuid().v4();
         await prefs.setString('userUUID', uuid);
         print('New UUID generated: $uuid');
+
+        // Tambahkan user baru ke server
+        User newUser = User(uuid: uuid);
+        await userService.addUser(newUser);
       } else {
-        print('Existing UUID found: $uuid');
+        await userService.cekUser(uuid);
       }
 
       if (!mounted) return;
-      
+
       // Menggunakan named route untuk navigasi
       Navigator.of(context).pushReplacementNamed('/home');
-      
     } catch (e) {
       print('Error in _checkAndGenerateUUID: $e');
       if (!mounted) return;
@@ -146,5 +152,3 @@ class FavoritesPage extends StatelessWidget {
     );
   }
 }
-
-// Tambahkan class untuk halaman-halaman lain sesuai kebutuhan
