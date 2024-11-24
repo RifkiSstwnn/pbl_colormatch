@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'package:pbl_colormatch/services/history_service.dart'; // Import HistoryService
+import 'package:google_fonts/google_fonts.dart'; // Ensure you import Google Fonts
 
 class ResultDialog extends StatelessWidget {
   final Map<String, dynamic> latestHistory;
@@ -15,6 +16,7 @@ class ResultDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
       ),
+      backgroundColor: Colors.white, // Set the background color to white
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -62,19 +64,34 @@ class ResultDialog extends StatelessWidget {
               const SizedBox(height: 40),
               Text('Skin Tone: ${latestHistory['skin_tone']}'),
               Text('Color Palette: ${latestHistory['color_palette']}'),
-              Text('Nama: ${latestHistory['name']}'),
               Text('Timestamp: ${latestHistory['timestamp']}'),
               const SizedBox(height: 40),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  ElevatedButton(
+                  // Modified Edit Name button with smaller size
+                  OutlinedButton.icon(
                     onPressed: () {
                       // Menampilkan dialog untuk mengedit nama
                       _showEditNameDialog(context, latestHistory);
                     },
-                    child: const Text('Edit Nama'),
+                    icon: const Icon(Icons.edit, color: Color(0xFF235F60)),
+                    label: Text(
+                      'Edit Nama',
+                      style: TextStyle(
+                        color: const Color(0xFF235F60),
+                        fontFamily: GoogleFonts.poppins().fontFamily,
+                        fontSize: 12, // Reduced font size
+                      ),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size(60, 40), // Reduced minimum size
+                      side: const BorderSide(
+                          color: Color(0xFF235F60)), // Border color
+                      backgroundColor: Colors.white, // Button background color
+                    ),
                   ),
+                  // Modified button with green background and white text
                   ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pop(); // Menutup dialog
@@ -87,6 +104,10 @@ class ResultDialog extends StatelessWidget {
                             false, // Menghapus semua rute sebelumnya
                       );
                     },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: const Color(0xFF235F60),
+                    ),
                     child: const Text('Tutup'),
                   ),
                 ],
@@ -106,18 +127,48 @@ class ResultDialog extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Edit Nama'),
+          title: const Text(
+            'Edit Nama',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          backgroundColor: Colors.white, // Set the background color to white
           content: TextField(
             controller: nameController,
-            decoration: const InputDecoration(hintText: "Masukkan nama baru"),
+            cursorColor: const Color(0xFF235F60), // Set cursor color to green
+            decoration: InputDecoration(
+              hintText: "Masukkan nama baru",
+              focusedBorder: UnderlineInputBorder(
+                borderSide:
+                    const BorderSide(color: Color(0xFF235F60), width: 2.0),
+              ),
+            ),
           ),
           actions: [
-            TextButton(
+            // Modified Batal button to meet the specified requirements
+            OutlinedButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Menutup dialog
               },
-              child: const Text('Batal'),
+              child: Text(
+                'Batal',
+                style: TextStyle(
+                  color: const Color(0xFF235F60), // Text color
+                  fontFamily: GoogleFonts.poppins().fontFamily,
+                  fontSize: 12, // Reduced font size
+                ),
+              ),
+              style: OutlinedButton.styleFrom(
+                backgroundColor: Colors.white, // Background color
+                foregroundColor: const Color(0xFF235F60), // Text color
+                minimumSize: const Size(60, 40), // Minimum size
+                side:
+                    const BorderSide(color: Color(0xFF235F60)), // Border color
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50), // Radius 50
+                ),
+              ),
             ),
+            // Modified Simpan button with green background and white text
             TextButton(
               onPressed: () async {
                 String newName = nameController.text.trim();
@@ -156,6 +207,10 @@ class ResultDialog extends StatelessWidget {
                   );
                 }
               },
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white, // Text color
+                backgroundColor: const Color(0xFF235F60), // Background color
+              ),
               child: const Text('Simpan'),
             ),
           ],

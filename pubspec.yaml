@@ -24,6 +24,12 @@ dependencies:
   uuid: ^3.0.6
   dio: ^5.0.0
 
+flutter_native_splash:
+  color: '#ffffff'
+  image: assets/logo1.png # The logo image
+  android: true
+  ios: true
+  web: true
 
 dev_dependencies:
   flutter_test:
@@ -36,13 +42,4 @@ flutter:
   # Adding assets for the app, including the splash screen image
   assets:
     - assets/
-
-flutter_native_splash:
-  color: '#ffffff'
-  image: assets/logo1.png # The logo image
-  android: true
-  ios: true
-  web: false
-
-
-
+    - assets/logo1.png

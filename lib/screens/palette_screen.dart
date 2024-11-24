@@ -32,7 +32,7 @@ class PaletteScreen extends StatelessWidget {
         ],
         'description':
             'Warna kulit ini biasanya memiliki undertone yang hangat dan cerah, sempurna untuk menampilkan warna-warna yang hidup.',
-        'imagePath': 'assets/spring.png', // Add image path
+        'imagePath': 'assets/spring1.png', // Add image path
       },
       'Summer': {
         'skinColors': [
@@ -58,7 +58,7 @@ class PaletteScreen extends StatelessWidget {
         ],
         'description':
             'Warna kulit ini biasanya sejuk dan lembut, selaras dengan warna pastel dan lembut.',
-        'imagePath': 'assets/summer.png', // Add image path
+        'imagePath': 'assets/summer1.png', // Add image path
       },
       'Autumn': {
         'skinColors': [
@@ -84,7 +84,7 @@ class PaletteScreen extends StatelessWidget {
         ],
         'description':
             'Warna kulit ini memiliki undertone yang kaya dan hangat, ideal untuk warna bumi dan warna-warna cerah.',
-        'imagePath': 'assets/autumn.png', // Add image path
+        'imagePath': 'assets/autumn1.png', // Add image path
       },
       'Winter': {
         'skinColors': [
@@ -110,30 +110,25 @@ class PaletteScreen extends StatelessWidget {
         ],
         'description':
             'Warna kulit ini sering memiliki undertone yang sejuk dan segar, yang cocok dengan warna-warna berani dan mencolok.',
-        'imagePath': 'assets/winter.png', // Add image path
+        'imagePath': 'assets/winter1.png', // Add image path
       },
     };
 
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          SliverAppBar(
-            expandedHeight: 90.0, // Maximum height when expanded
+          const SliverAppBar(
+            expandedHeight: 90.0,
             flexibleSpace: FlexibleSpaceBar(
-              titlePadding: const EdgeInsets.only(
-                  left: 30, bottom: 16.0), // Add padding for title
-              title: const Text(
-                'Color Palette',
-                style: TextStyle(
-                    fontSize: 30, fontWeight: FontWeight.bold), // Text size
-              ),
-              centerTitle: false, // Title not centered
+              titlePadding: EdgeInsets.only(left: 30, bottom: 15.0),
+              title: Text('Palette',
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+              centerTitle: false,
             ),
-            pinned: false, // Keeps AppBar visible when scrolling
-            elevation: 0, // Remove shadow
-          ),
-          SliverToBoxAdapter(
-            child: _buildImageContainer(), // Place image container here
+            pinned: false,
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            automaticallyImplyLeading: false,
           ),
           SliverPadding(
             padding: const EdgeInsets.all(16.0),
@@ -141,89 +136,88 @@ class PaletteScreen extends StatelessWidget {
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
                   final entry = seasonDetails.entries.elementAt(index);
-                  return GestureDetector(
-                    onTap: () {
-                      // Navigate to corresponding season's detail page
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SkinToneDetailScreen(
-                            season: entry.key,
-                            description:
-                                entry.value['description'], // Pass description
-                            skinColors:
-                                entry.value['skinColors'] as List<Color>,
-                            eyeColors: entry.value['eyeColors'] as List<Color>,
-                            eyebrowColors:
-                                entry.value['eyebrowColors'] as List<Color>,
-                            bestColors:
-                                entry.value['bestColors'] as List<Color>,
-                            imagePath:
-                                entry.value['imagePath'], // Pass image path
-                          ),
-                        ),
-                      );
-                    },
-                    child: Card(
-                      elevation: 0,
-                      color: const Color.fromARGB(255, 245, 245, 245),
-                      margin: const EdgeInsets.symmetric(vertical: 6),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            // Display season's image
-                            Container(
-                              width: 80,
-                              height: 80,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(40),
-                                image: DecorationImage(
-                                  image: AssetImage(entry.value[
-                                      'imagePath']), // Image path from data
-                                  fit: BoxFit.cover,
-                                ),
+                  return Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          // Navigate to corresponding season's detail page
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SkinToneDetailScreen(
+                                season: entry.key,
+                                description: entry.value['description'],
+                                skinColors:
+                                    entry.value['skinColors'] as List<Color>,
+                                eyeColors:
+                                    entry.value['eyeColors'] as List<Color>,
+                                eyebrowColors:
+                                    entry.value['eyebrowColors'] as List<Color>,
+                                bestColors:
+                                    entry.value['bestColors'] as List<Color>,
+                                imagePath: entry.value['imagePath'],
                               ),
                             ),
-                            const SizedBox(width: 20),
-                            Text(
-                              entry.key, // Display season name
-                              style: const TextStyle(
-                                  fontSize: 24, fontWeight: FontWeight.bold),
+                          );
+                        },
+                        child: Card(
+                          color: Colors.white,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(30.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: 80,
+                                  height: 80,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(40),
+                                    image: DecorationImage(
+                                      image:
+                                          AssetImage(entry.value['imagePath']),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 20),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        entry.key,
+                                        style: const TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 20,
+                                  color: Color(0xffb1e33d),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
-                    ),
+                      const SizedBox(height: 5),
+                    ],
                   );
                 },
-                childCount: seasonDetails.length, // Number of items displayed
+                childCount: seasonDetails.length,
               ),
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  // Image container widget
-  Widget _buildImageContainer() {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Container(
-        width: double.infinity, // Full width
-        height: 178, // Fixed height for image
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10), // Rounded corners
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(10), // Rounded corners for image
-          child: FittedBox(
-            fit: BoxFit.cover, // Fit image inside the box
-            child: Image.asset('assets/palette.png'), // Image from assets
-          ),
-        ),
       ),
     );
   }

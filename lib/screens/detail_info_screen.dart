@@ -10,7 +10,21 @@ class DetailInfoScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        leadingWidth: 0, // Memperlebar area untuk judul
+        leading: SizedBox.shrink(), // Menghilangkan leading (back button)
+        titleSpacing: 0, // Memperkecil jarak antara judul dan tepi
+        title: Align(
+          alignment: Alignment.centerLeft, // Mengatur posisi judul ke kiri
+          child: Padding(
+            padding:
+                const EdgeInsets.only(left: 16.0), // Tambahkan padding kiri
+            child: Text(
+              title,
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+        backgroundColor: Colors.grey[100],
       ),
       body: Padding(
         padding: const EdgeInsets.all(13),
@@ -19,19 +33,12 @@ class DetailInfoScreen extends StatelessWidget {
           children: [
             SizedBox(
                 height:
-                    32), // Tambahkan jarak antara judul dan detail deskripsi
+                    10), // Tambahkan jarak antara judul dan detail deskripsi
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(
                     10), // Buat sudut container menjadi bulat
                 color: Colors.white, // Ubah warna background container
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5), // Ubah warna bayangan
-                    spreadRadius: 2, // Ubah ukuran bayangan
-                    blurRadius: 5, // Ubah ukuran bayangan
-                  ),
-                ],
               ),
               padding: const EdgeInsets.all(16.0),
               child: Text(

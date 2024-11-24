@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pbl_colormatch/services/history_service.dart';
-import 'result.dart'; // Mengimpor ResultDialog
+import 'result.dart'; // Import ResultDialog
+import 'package:google_fonts/google_fonts.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({Key? key}) : super(key: key);
@@ -17,7 +18,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   void initState() {
     super.initState();
     _historyFuture =
-        _historyService.getHistory(); // Ambil seluruh history dari service
+        _historyService.getHistory(); // Fetch all history from service
   }
 
   @override
@@ -31,28 +32,47 @@ class _HistoryScreenState extends State<HistoryScreen> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No history found.'));
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'History', // Title when there is no history
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                      height: 20), // Spacing between title and message
+                  const Text(
+                    'No history found.',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
+            );
           }
 
-          final historyList = snapshot.data!; // Ambil seluruh data history
+          final historyList = snapshot.data!; // Retrieve all history data
 
           return CustomScrollView(
             slivers: [
               SliverAppBar(
-                expandedHeight:
-                    80.0, // Tinggi yang lebih besar untuk memberikan ruang
-                backgroundColor: const Color.fromARGB(
-                    255, 255, 255, 255), // Ganti dengan warna yang diinginkan
+                expandedHeight: 90.0, // Updated height
+                backgroundColor: Colors.transparent,
                 flexibleSpace: FlexibleSpaceBar(
-                  title: const Text(
-                    'Scan History',
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  titlePadding: EdgeInsets.only(
+                      left: 30, bottom: 16.0), // Updated padding
+                  title: Text(
+                    'History', // Updated title
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ), // Updated style
                   ),
-                  titlePadding: const EdgeInsets.only(
-                      bottom: 10.0, left: 20), // Padding bawah untuk judul
+                  centerTitle: false, // Ensure title is left-aligned
                 ),
-                pinned: true, // Menjaga AppBar tetap terlihat saat scroll
+                pinned: false, // Set pinned to false
                 elevation: 0,
+                automaticallyImplyLeading: false,
               ),
               SliverList(
                 delegate: SliverChildBuilderDelegate(
@@ -71,11 +91,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   Widget _buildHistoryItem(
       BuildContext context, Map<String, dynamic> historyData) {
-    int id = historyData['id']; // Ambil ID dari historyData
+    int id = historyData['id']; // Get ID from historyData
 
     return InkWell(
       onTap: () {
-        // Menampilkan ResultDialog saat item di klik
+        // Show ResultDialog when item is clicked
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -98,14 +118,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Kolom untuk gambar dan nama di bawahnya
+                  // Column for image and name below it
                   Column(
                     children: [
-                      // Gambar
+                      // Image
                       ClipOval(
                         child: Image.network(
                           historyData['foto_output'] ??
-                              '', // URL foto output dari API
+                              '', // Image URL from API
                           width: 80,
                           height: 80,
                           fit: BoxFit.cover,
@@ -115,16 +135,16 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               height: 80,
                               width: 80,
                               child: Center(
-                                  child: Text('Gambar tidak dapat dimuat')),
+                                  child: Text('Image could not be loaded')),
                             );
                           },
                         ),
                       ),
-                      const SizedBox(height: 5), // Jarak antara gambar dan nama
-                      // Nama di bawah gambar
+                      const SizedBox(height: 5), // Space between image and name
+                      // Name below the image
                       Text(
                         historyData['name'] ??
-                            'Unknown', // Tampilkan nama atau nilai default
+                            'Unknown', // Show name or default value
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -133,21 +153,21 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     ],
                   ),
                   const SizedBox(
-                      width: 55), // Jarak antara gambar dan skin tone
-                  // Skin tone di sebelah kanan gambar
+                      width: 55), // Space between image and skin tone
+                  // Skin tone to the right of the image
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment:
-                        CrossAxisAlignment.start, // Rata kiri untuk teks
+                        CrossAxisAlignment.start, // Align text to the left
                     children: [
                       Text(
                         historyData['skin_tone'] ??
-                            'Unknown Skin Tone', // Tampilkan skin tone atau nilai default
+                            'Unknown Skin Tone', // Show skin tone or default value
                         style: const TextStyle(
                           fontSize: 20,
                           color: Color.fromARGB(255, 6, 6, 6),
-                          fontWeight: FontWeight.bold,
-                          // Warna teks untuk skin tone
+                          fontWeight:
+                              FontWeight.bold, // Text color for skin tone
                         ),
                       ),
                     ],
@@ -156,28 +176,56 @@ class _HistoryScreenState extends State<HistoryScreen> {
               ),
             ),
             Positioned(
-              right: 20, // Posisi ikon sampah
+              right: 20, // Position of delete icon
               top: 13,
               child: IconButton(
                 icon: const Icon(Icons.delete,
                     color: Color.fromARGB(255, 36, 36, 36)),
                 onPressed: () async {
-                  // Konfirmasi penghapusan
+                  // Confirm deletion
                   final confirmDelete = await showDialog<bool>(
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: const Text('Konfirmasi'),
+                        backgroundColor: Colors.white,
+                        title: const Text(
+                          'Confirm',
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold),
+                        ),
                         content: const Text(
-                            'Apakah Anda yakin ingin menghapus riwayat ini?'),
+                            'Are you sure you want to delete this history?'),
                         actions: [
-                          TextButton(
+                          // TextButton(
+                          //   onPressed: () => Navigator.of(context).pop(false),
+                          //   child: const Text('Cancel'),
+                          // ),
+                          OutlinedButton.icon(
                             onPressed: () => Navigator.of(context).pop(false),
-                            child: const Text('Batal'),
+                            label: Text(
+                              'Cancel',
+                              style: TextStyle(
+                                color: const Color(0xFF235F60),
+                                fontFamily: GoogleFonts.poppins().fontFamily,
+                                fontSize: 12, // Reduced font size
+                              ),
+                            ),
+                            style: OutlinedButton.styleFrom(
+                              minimumSize:
+                                  const Size(60, 40), // Reduced minimum size
+                              side: const BorderSide(
+                                  color: Color(0xFF235F60)), // Border color
+                              backgroundColor:
+                                  Colors.white, // Button background color
+                            ),
                           ),
-                          TextButton(
+                          ElevatedButton(
                             onPressed: () => Navigator.of(context).pop(true),
-                            child: const Text('Hapus'),
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: const Color(0xFF235F60),
+                            ),
+                            child: const Text('Delete'),
                           ),
                         ],
                       );
@@ -185,21 +233,21 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   );
 
                   if (confirmDelete == true) {
-                    // Panggil metode untuk menghapus history
+                    // Call method to delete history
                     bool success = await _historyService.deleteHistory(id);
                     if (success) {
-                      // Jika berhasil, refresh data history
+                      // If successful, refresh history data
                       setState(() {
                         _historyFuture = _historyService.getHistory();
                       });
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                            content: Text('Riwayat berhasil dihapus')),
+                            content: Text('History deleted successfully')),
                       );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                            content: Text('Gagal menghapus riwayat')),
+                            content: Text('Failed to delete history')),
                       );
                     }
                   }

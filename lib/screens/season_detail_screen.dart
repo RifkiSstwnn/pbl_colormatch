@@ -1,95 +1,132 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SkinToneDetailScreen extends StatelessWidget {
   final String season;
-  final String description; // Parameter deskripsi
+  final String description;
   final List<Color> skinColors;
   final List<Color> eyeColors;
   final List<Color> eyebrowColors;
   final List<Color> bestColors;
-  final String imagePath; // Add image path parameter
+  final String imagePath;
 
   const SkinToneDetailScreen({
     super.key,
     required this.season,
-    required this.description, // Tambahkan parameter ini
+    required this.description,
     required this.skinColors,
     required this.eyeColors,
     required this.eyebrowColors,
     required this.bestColors,
-    required this.imagePath, // Add image path parameter
+    required this.imagePath,
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Skin Tone Details'),
-      ),
-      body: SingleChildScrollView(
-        // Wrap the Column with SingleChildScrollView
-        padding: const EdgeInsets.all(16.0),
+      backgroundColor: Colors.white,
+      body: DefaultTabController(
+        length: 2,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 10),
-
-            // Display the image with rounded corners
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10), // Rounded corners
-              child: Image.asset(
-                imagePath,
-                fit: BoxFit.cover, // Adjust the image to cover the space
+            Center(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.asset(
+                  imagePath,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-            const SizedBox(height: 10), // Space between image and description
-
-            Text(
-              description, // Tampilkan deskripsi di sini
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 20),
-
-            // Container with rounded corners for color sections
+            const SizedBox(height: 30),
             Container(
-              // decoration: BoxDecoration(
-              //   color: Colors.grey[200], // Background color
-              //   borderRadius: BorderRadius.circular(10), // Rounded corners
-              // ),
-              padding:
-                  const EdgeInsets.all(20.0), // Padding inside the container
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Section for Skin
-                  _buildSectionTitle('Skin'),
-                  _buildColorRow(skinColors),
-
-                  const SizedBox(height: 20),
-
-                  // Section for Eyes
-                  _buildSectionTitle('Eyes'),
-                  _buildColorRow(eyeColors),
-
-                  const SizedBox(height: 20),
-
-                  // Section for Eyebrow
-                  _buildSectionTitle('Eyebrow'),
-                  _buildColorRow(eyebrowColors),
-
-                  const SizedBox(height: 20),
-
-                  // Section for Best Colors (Outfit)
-                  _buildSectionTitle('Best Color (Outfit)'),
-                  _buildColorRow(bestColors),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: TabBar(
+                indicator: const UnderlineTabIndicator(
+                  borderSide: BorderSide(
+                    color: Color(0xFF235F60),
+                    width: 3.0,
+                  ),
+                  insets: EdgeInsets.symmetric(horizontal: 16.0),
+                ),
+                labelColor: const Color(0xFF235F60),
+                unselectedLabelColor: Colors.grey,
+                tabs: [
+                  Tab(
+                    child: Text(
+                      'Description',
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  Tab(
+                    child: Text(
+                      'Colors',
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
-
-            const SizedBox(height: 20),
-            Text(
-              'Inilah warna terbaik untuk skin tone $season yang dapat melengkapi kecantikan alami mereka dan menonjolkan fitur-fitur cerah mereka.',
-              style: const TextStyle(fontSize: 16),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  SingleChildScrollView(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          description,
+                          style: GoogleFonts.poppins(fontSize: 16),
+                        ),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
+                  ),
+                  SingleChildScrollView(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 20),
+                        Container(
+                          padding: const EdgeInsets.all(20.0),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildSectionTitle('Skin'),
+                              _buildColorRow(skinColors),
+                              const SizedBox(height: 20),
+                              _buildSectionTitle('Eyes'),
+                              _buildColorRow(eyeColors),
+                              const SizedBox(height: 20),
+                              _buildSectionTitle('Eyebrow'),
+                              _buildColorRow(eyebrowColors),
+                              const SizedBox(height: 20),
+                              _buildSectionTitle('Best Color (Outfit)'),
+                              _buildColorRow(bestColors),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -97,19 +134,20 @@ class SkinToneDetailScreen extends StatelessWidget {
     );
   }
 
-  // Method to create section titles
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      style: GoogleFonts.poppins(
+        fontSize: 14,
+        fontWeight: FontWeight.bold,
+      ),
     );
   }
 
-  // Method to build a row of circular color boxes with border
   Widget _buildColorRow(List<Color> colors) {
     return Wrap(
-      spacing: 10, // Space between colors
-      runSpacing: 10, // Space between rows
+      spacing: 10,
+      runSpacing: 10,
       children: List.generate(colors.length, (index) {
         return Container(
           width: 50,
@@ -118,10 +156,49 @@ class SkinToneDetailScreen extends StatelessWidget {
             color: colors[index],
             shape: BoxShape.circle,
             border: Border.all(
-                color: Colors.black, width: 2), // Menambahkan border hitam
+              color: Colors.black,
+              width: 2,
+            ),
           ),
         );
       }),
     );
+  }
+}
+
+class UnderlineTabIndicator extends Decoration {
+  final BorderSide borderSide;
+  final EdgeInsets insets;
+
+  const UnderlineTabIndicator({
+    this.borderSide = const BorderSide(width: 2.0, color: Colors.white),
+    this.insets = EdgeInsets.zero,
+  });
+
+  @override
+  BoxPainter createBoxPainter([VoidCallback? onChanged]) {
+    return _UnderlineTabIndicatorPainter(this, onChanged);
+  }
+}
+
+class _UnderlineTabIndicatorPainter extends BoxPainter {
+  _UnderlineTabIndicatorPainter(this.decoration, VoidCallback? onChanged)
+      : super(onChanged);
+
+  final UnderlineTabIndicator decoration;
+
+  @override
+  void paint(Canvas canvas, Offset offset, ImageConfiguration configuration) {
+    assert(configuration.size != null);
+    final Rect rect = offset & configuration.size!;
+    final Rect indicatorRect = Rect.fromLTWH(
+      rect.left + decoration.insets.left,
+      rect.bottom - decoration.borderSide.width - decoration.insets.bottom,
+      rect.width - decoration.insets.horizontal,
+      decoration.borderSide.width,
+    );
+    final Paint paint = decoration.borderSide.toPaint()
+      ..color = decoration.borderSide.color;
+    canvas.drawRect(indicatorRect, paint);
   }
 }
