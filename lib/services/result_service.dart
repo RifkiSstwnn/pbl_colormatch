@@ -3,12 +3,12 @@ import 'package:http/http.dart' as http;
 import 'package:pbl_colormatch/utils/getUUID.dart'; // Import UUIDService
 
 class ResultService {
-  final String baseUrl = 'http://192.168.0.107:5000'; // URL dasar untuk API
+  final String baseUrl = 'http://192.168.18.20:5000'; // URL dasar untuk API
   final UUIDService uuidService = UUIDService(); // Instance dari UUIDService
 
   Future<Map<String, dynamic>?> getResult() async {
     String? uuid = await uuidService.getUUID(); // Mengambil UUID
-    
+
     if (uuid == null) {
       print("UUID is null, cannot fetch latest history.");
       return null; // Atau bisa throw exception

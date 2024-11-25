@@ -1,7 +1,8 @@
+import 'dart:convert'; // Untuk jsonDecode
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'package:pbl_colormatch/services/history_service.dart'; // Import HistoryService
-import 'package:google_fonts/google_fonts.dart'; // Ensure you import Google Fonts
+import 'package:google_fonts/google_fonts.dart'; // Import Google Fonts
 
 class ResultDialog extends StatelessWidget {
   final Map<String, dynamic> latestHistory;
@@ -12,11 +13,15 @@ class ResultDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Konversi daftar warna
+    List<Color> colorPalette =
+        _parseColorPalette(latestHistory['color_palette']);
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
       ),
-      backgroundColor: Colors.white, // Set the background color to white
+      backgroundColor: Colors.white,
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -62,17 +67,36 @@ class ResultDialog extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 40),
+              Text('Confidence Level: ${latestHistory['confidence']}'),
               Text('Skin Tone: ${latestHistory['skin_tone']}'),
-              Text('Color Palette: ${latestHistory['color_palette']}'),
-              Text('Timestamp: ${latestHistory['timestamp']}'),
+              const Text('Color Palette:'),
+              const SizedBox(height: 10),
+              SingleChildScrollView(
+                child: Wrap(
+                  spacing: 8.0,
+                  runSpacing: 8.0,
+                  children: colorPalette.map((color) {
+                    return Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: color,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.black12,
+                          width: 1.0,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
               const SizedBox(height: 40),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Modified Edit Name button with smaller size
                   OutlinedButton.icon(
                     onPressed: () {
-                      // Menampilkan dialog untuk mengedit nama
                       _showEditNameDialog(context, latestHistory);
                     },
                     icon: const Icon(Icons.edit, color: Color(0xFF235F60)),
@@ -81,27 +105,22 @@ class ResultDialog extends StatelessWidget {
                       style: TextStyle(
                         color: const Color(0xFF235F60),
                         fontFamily: GoogleFonts.poppins().fontFamily,
-                        fontSize: 12, // Reduced font size
+                        fontSize: 12,
                       ),
                     ),
                     style: OutlinedButton.styleFrom(
-                      minimumSize: const Size(60, 40), // Reduced minimum size
-                      side: const BorderSide(
-                          color: Color(0xFF235F60)), // Border color
-                      backgroundColor: Colors.white, // Button background color
+                      minimumSize: const Size(60, 40),
+                      side: const BorderSide(color: Color(0xFF235F60)),
+                      backgroundColor: Colors.white,
                     ),
                   ),
-                  // Modified button with green background and white text
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pop(); // Menutup dialog
+                      Navigator.of(context).pop();
                       Navigator.pushAndRemoveUntil(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                HomePage()), // Arahkan ke halaman beranda
-                        (Route<dynamic> route) =>
-                            false, // Menghapus semua rute sebelumnya
+                        MaterialPageRoute(builder: (context) => HomePage()),
+                        (Route<dynamic> route) => false,
                       );
                     },
                     style: ElevatedButton.styleFrom(
@@ -119,6 +138,31 @@ class ResultDialog extends StatelessWidget {
     );
   }
 
+  /// Fungsi untuk mem-parse daftar warna dari data JSON
+  List<Color> _parseColorPalette(dynamic colorPalette) {
+    try {
+      // Jika color_palette adalah string JSON, decode dulu
+      if (colorPalette is String) {
+        List<dynamic> paletteList = jsonDecode(colorPalette);
+        return paletteList.map((hex) {
+          return Color(int.parse(hex.toString().replaceFirst('#', '0xFF')));
+        }).toList();
+      }
+
+      // Jika color_palette sudah berupa List<dynamic>, langsung parse
+      if (colorPalette is List<dynamic>) {
+        return colorPalette.map((hex) {
+          return Color(int.parse(hex.toString().replaceFirst('#', '0xFF')));
+        }).toList();
+      }
+    } catch (e) {
+      debugPrint('Error parsing color_palette: $e');
+    }
+
+    // Jika gagal mem-parse, return list kosong
+    return [];
+  }
+
   void _showEditNameDialog(BuildContext context, Map<String, dynamic> history) {
     final TextEditingController nameController =
         TextEditingController(text: history['name']);
@@ -131,10 +175,10 @@ class ResultDialog extends StatelessWidget {
             'Edit Nama',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
-          backgroundColor: Colors.white, // Set the background color to white
+          backgroundColor: Colors.white,
           content: TextField(
             controller: nameController,
-            cursorColor: const Color(0xFF235F60), // Set cursor color to green
+            cursorColor: const Color(0xFF235F60),
             decoration: InputDecoration(
               hintText: "Masukkan nama baru",
               focusedBorder: UnderlineInputBorder(
@@ -144,31 +188,28 @@ class ResultDialog extends StatelessWidget {
             ),
           ),
           actions: [
-            // Modified Batal button to meet the specified requirements
             OutlinedButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Menutup dialog
+                Navigator.of(context).pop();
               },
               child: Text(
                 'Batal',
                 style: TextStyle(
-                  color: const Color(0xFF235F60), // Text color
+                  color: const Color(0xFF235F60),
                   fontFamily: GoogleFonts.poppins().fontFamily,
-                  fontSize: 12, // Reduced font size
+                  fontSize: 12,
                 ),
               ),
               style: OutlinedButton.styleFrom(
-                backgroundColor: Colors.white, // Background color
-                foregroundColor: const Color(0xFF235F60), // Text color
-                minimumSize: const Size(60, 40), // Minimum size
-                side:
-                    const BorderSide(color: Color(0xFF235F60)), // Border color
+                backgroundColor: Colors.white,
+                foregroundColor: const Color(0xFF235F60),
+                minimumSize: const Size(60, 40),
+                side: const BorderSide(color: Color(0xFF235F60)),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50), // Radius 50
+                  borderRadius: BorderRadius.circular(50),
                 ),
               ),
             ),
-            // Modified Simpan button with green background and white text
             TextButton(
               onPressed: () async {
                 String newName = nameController.text.trim();
@@ -176,18 +217,13 @@ class ResultDialog extends StatelessWidget {
                   bool success =
                       await historyService.editName(history['id'], newName);
                   if (success) {
-                    // Jika berhasil, tampilkan snackbar
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                           content: Text('Nama berhasil diperbarui!')),
                     );
-
-                    // Memperbarui nama di latestHistory
                     history['name'] = newName;
-
-                    // Memperbarui tampilan dialog
-                    Navigator.of(context).pop(); // Menutup dialog edit
-                    Navigator.of(context).pop(); // Menutup dialog hasil
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -195,21 +231,19 @@ class ResultDialog extends StatelessWidget {
                       },
                     );
                   } else {
-                    // Jika gagal, tampilkan pesan kesalahan
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Gagal memperbarui nama.')),
                     );
                   }
                 } else {
-                  // Jika nama kosong, tampilkan pesan kesalahan
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Nama tidak boleh kosong.')),
                   );
                 }
               },
               style: TextButton.styleFrom(
-                foregroundColor: Colors.white, // Text color
-                backgroundColor: const Color(0xFF235F60), // Background color
+                foregroundColor: Colors.white,
+                backgroundColor: const Color(0xFF235F60),
               ),
               child: const Text('Simpan'),
             ),

@@ -20,6 +20,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
   late Future<void> _initializeControllerFuture;
   late FaceDetector _faceDetector;
   bool _isFrontCamera = false;
+  bool _isFlashOn = false; // Variabel untuk status flash
 
   @override
   void initState() {
@@ -30,7 +31,6 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
 
   Future<void> _initializeCamera() async {
     try {
-      // Initialize the camera controller with the selected camera
       _controller = CameraController(
         widget.camera,
         ResolutionPreset.high,
@@ -38,31 +38,21 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
       _initializeControllerFuture = _controller.initialize();
       _isFrontCamera = widget.camera.lensDirection == CameraLensDirection.front;
 
-      // Notify that the state has changed to rebuild the widget
       setState(() {});
     } catch (e) {
-      // Log error and show appropriate error message
       print("Camera initialization error: $e");
     }
   }
 
   void _toggleCamera() async {
-    // Dispose of the current controller before switching cameras
     await _controller.dispose();
-
-    // Retrieve the list of available cameras
     final cameras = await availableCameras();
-
-    // Toggle between the front and back cameras
     final newCamera = _isFrontCamera
         ? cameras.firstWhere(
-            (camera) => camera.lensDirection == CameraLensDirection.back,
-          )
+            (camera) => camera.lensDirection == CameraLensDirection.back)
         : cameras.firstWhere(
-            (camera) => camera.lensDirection == CameraLensDirection.front,
-          );
+            (camera) => camera.lensDirection == CameraLensDirection.front);
 
-    // Update the state with the new camera and initialize the controller
     setState(() {
       _isFrontCamera = !_isFrontCamera;
       _controller = CameraController(
@@ -73,13 +63,26 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
     });
   }
 
+  void _toggleFlash() async {
+    if (_controller.value.flashMode == FlashMode.torch) {
+      await _controller.setFlashMode(FlashMode.off);
+      setState(() {
+        _isFlashOn = false;
+      });
+    } else {
+      await _controller.setFlashMode(FlashMode.torch);
+      setState(() {
+        _isFlashOn = true;
+      });
+    }
+  }
+
   Future<void> _takePicture() async {
     try {
       await _initializeControllerFuture;
 
       if (_isFrontCamera) {
         await ScreenBrightness().setScreenBrightness(1.0);
-
         showDialog(
           context: context,
           barrierDismissible: false,
@@ -118,10 +121,14 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
           }
         }
       } else {
-        await _controller.setFlashMode(FlashMode.torch);
+        if (_isFlashOn) {
+          await _controller.setFlashMode(FlashMode.torch);
+        }
         await Future.delayed(Duration(milliseconds: 100));
         final image = await _controller.takePicture();
-        await _controller.setFlashMode(FlashMode.off);
+        if (_isFlashOn) {
+          await _controller.setFlashMode(FlashMode.off);
+        }
 
         final inputImage = InputImage.fromFilePath(image.path);
         final faces = await _faceDetector.processImage(inputImage);
@@ -208,6 +215,10 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
             icon: Icon(Icons.flip_camera_android),
             onPressed: _toggleCamera,
           ),
+          IconButton(
+            icon: Icon(_isFlashOn ? Icons.flash_on : Icons.flash_off),
+            onPressed: _toggleFlash,
+          ),
         ],
       ),
       body: Stack(
@@ -232,11 +243,10 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
               ),
             ),
           ),
-          // Menambahkan tombol shutter di tengah bagian bawah
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 32.0), // Jarak dari bawah
+              padding: const EdgeInsets.only(bottom: 32.0),
               child: FloatingActionButton(
                 onPressed: _takePicture,
                 child: Icon(Icons.camera),
