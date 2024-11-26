@@ -237,16 +237,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(
-              child: Text(
-                'No history found.',
-                style: TextStyle(fontSize: 18),
-              ),
-            );
           }
 
-          final historyList = snapshot.data!;
+          final historyList = snapshot.data ?? [];
           final historyCount = historyList.length;
 
           // Filter history list based on the search query
@@ -268,67 +261,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
             children: [
               CustomScrollView(
                 slivers: [
-                  SliverAppBar(
+                  const SliverAppBar(
                     expandedHeight: 90.0,
                     flexibleSpace: FlexibleSpaceBar(
-                      titlePadding:
-                          const EdgeInsets.only(left: 30, bottom: 15.0),
-                      title: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'History',
-                            style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.bold),
-                          ),
-                          // Show the TextField
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 30.0, right: 30.0),
-                              child: Container(
-                                height:
-                                    23, // Set a fixed height for the TextField
-                                child: TextField(
-                                  focusNode: _searchFocusNode,
-                                  cursorColor: const Color(0xFF235F60),
-                                  style: const TextStyle(fontSize: 11),
-                                  decoration: InputDecoration(
-                                    hintText: 'Cari...',
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(50),
-                                      borderSide: BorderSide(
-                                          color: const Color(0xFF235F60),
-                                          width: 2),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(50),
-                                      borderSide: BorderSide(
-                                          color: const Color(0xFF235F60),
-                                          width: 1),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(50),
-                                      borderSide: BorderSide(
-                                          color: const Color(0xFF235F60),
-                                          width: 1),
-                                    ),
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        vertical: 5, horizontal: 10),
-                                  ),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _searchQuery = value;
-                                    });
-                                  },
-                                  onSubmitted: (value) {
-                                    _toggleSearch();
-                                  },
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+                      titlePadding: EdgeInsets.only(left: 30, bottom: 15.0),
+                      title: Text(
+                        'History',
+                        style: TextStyle(
+                            fontSize: 25, fontWeight: FontWeight.bold),
                       ),
                       centerTitle: false,
                     ),
@@ -337,38 +277,104 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     backgroundColor: Colors.transparent,
                     automaticallyImplyLeading: false,
                   ),
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 20.0, right: 130.0, top: 10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextField(
+                            focusNode: _searchFocusNode,
+                            cursorColor: const Color(0xFF235F60),
+                            style: const TextStyle(fontSize: 14),
+                            decoration: InputDecoration(
+                              hintText: 'Cari...',
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 5, horizontal: 10),
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                _searchQuery = value;
+                              });
+                            },
+                            onSubmitted: (value) {
+                              _toggleSearch();
+                            },
+                          ),
+                          const SizedBox(height: 15),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 3.0),
+                            child: RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: '$historyCount ',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily:
+                                          GoogleFonts.poppins().fontFamily,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: 'riwayat',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.normal,
+                                      fontFamily: GoogleFonts.poppins()
+                                          .fontFamily, // Ensure Poppins font is used
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                      ),
+                    ),
+                  ),
                   SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (BuildContext context, int index) {
-                        if (index == 0) {
-                          return Column(
-                            children: [
-                              const SizedBox(height: 13),
-                              _buildHistoryItem(
-                                  context, filteredHistoryList[index]),
-                            ],
+                        // Display a message if the history list is empty
+                        if (filteredHistoryList.isEmpty) {
+                          return const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(20.0),
+                              child: Text(
+                                'No history found.',
+                                style: TextStyle(fontSize: 18),
+                              ),
+                            ),
                           );
                         }
                         return _buildHistoryItem(
                             context, filteredHistoryList[index]);
                       },
-                      childCount: filteredHistoryList.length,
+                      childCount: filteredHistoryList.isEmpty
+                          ? 1 // Show one item for the empty state message
+                          : filteredHistoryList.length,
                     ),
                   ),
                 ],
-              ),
-              Positioned(
-                left: 20,
-                bottom: 20,
-                child: Text(
-                  'Jumlah History: $historyCount',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.normal,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.grey,
-                  ),
-                ),
               ),
             ],
           );
@@ -381,5 +387,30 @@ class _HistoryScreenState extends State<HistoryScreen> {
   void dispose() {
     _searchFocusNode.dispose(); // Dispose of the FocusNode
     super.dispose();
+  }
+}
+
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+  _SliverAppBarDelegate({required this.child});
+
+  final Widget child;
+  final double _headerHeight = 100.0; // Set a fixed height for the header
+
+  @override
+  double get minExtent => _headerHeight;
+
+  @override
+  double get maxExtent => _headerHeight;
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return SizedBox.expand(
+        child: child); // Ensure the child fills the header space
+  }
+
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
+    return true; // Always rebuild when the header changes
   }
 }
