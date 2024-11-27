@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:pbl_colormatch/utils/getUUID.dart';
 
 // Model user untuk merepresentasikan data user
 class User {
@@ -17,17 +18,16 @@ class User {
 
 // Service untuk menambahkan dan memeriksa user
 class UserService {
-  final String addUserUrl =
-      'http://192.168.0.107:5000/add_user'; // Ganti dengan URL endpoint Flask
-  final String cekUserUrl =
-      'http://192.168.0.107:5000/cek_user'; // Ganti dengan URL endpoint Flask
+  final UUIDService uuidService = UUIDService();
+  final String Url =
+      'http://192.168.18.20:5000'; // Ganti dengan URL endpoint Flask
 
   // Fungsi untuk menambahkan user baru
   Future<void> addUser(User user) async {
     try {
       // Kirim data user sebagai JSON melalui POST request
       final response = await http.post(
-        Uri.parse(addUserUrl),
+        Uri.parse('$Url/add_user'),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -49,7 +49,7 @@ class UserService {
     try {
       // Kirim permintaan GET untuk memeriksa user
       final response = await http.get(
-        Uri.parse('$cekUserUrl/$userUuid'),
+        Uri.parse('$Url/cek_user/$userUuid'),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -66,6 +66,29 @@ class UserService {
         await addUser(newUser);
       } else {
         print("Gagal memeriksa user: ${response.body}");
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
+
+  // Fungsi untuk menghapus user dan history
+  Future<void> deleteUser() async {
+    String? uuid = await uuidService.getUUID(); // Mengambil UUID
+    try {
+      // Kirim permintaan DELETE untuk menghapus user
+      final response = await http.delete(
+        Uri.parse(
+            '$Url/delete_user/$uuid'), // Ganti dengan URL endpoint yang benar
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print("User  dan history berhasil dihapus");
+      } else {
+        print("Gagal menghapus user: ${response.body}");
       }
     } catch (e) {
       print("Error: $e");

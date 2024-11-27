@@ -61,10 +61,8 @@ class _SplashScreenState extends State<SplashScreen> {
           const Duration(seconds: 2)); // Delay untuk splash screen
 
       if (!mounted) return;
-
       final prefs = await SharedPreferences.getInstance();
       String? uuid = prefs.getString('userUUID');
-
       UserService userService = UserService();
 
       if (uuid == null) {
@@ -72,14 +70,12 @@ class _SplashScreenState extends State<SplashScreen> {
         uuid = const Uuid().v4();
         await prefs.setString('userUUID', uuid);
         print('New UUID generated: $uuid');
-
         // Tambahkan user baru ke server
         User newUser = User(uuid: uuid);
         await userService.addUser(newUser);
       } else {
         await userService.cekUser(uuid);
       }
-
       if (!mounted) return;
 
       // Menggunakan named route untuk navigasi
