@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../models/history_model.dart';
-import '../models/history_provider.dart';
-import 'home_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../models/history_model.dart';
+import '../services/history_service.dart';
+import 'home_screen.dart';
 
 class ResultDialog extends StatelessWidget {
   final History latestHistory; // Menambahkan parameter
+  final HistoryService _historyService = HistoryService();
 
   ResultDialog({Key? key, required this.latestHistory}) : super(key: key);
 
@@ -154,10 +154,14 @@ class ResultDialog extends StatelessWidget {
                 print('ID History: ${history.id}'); // Debugging
 
                 if (newName.isNotEmpty) {
+                  // Panggil fungsi editName dari HistoryService
                   bool success =
-                      await Provider.of<HistoryProvider>(context, listen: false)
-                          .editName(history.id, newName);
+                      await _historyService.editName(history.id, newName);
+
                   if (success) {
+                    // Update nama pada UI
+                    history.name = newName;
+
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text('Nama berhasil diperbarui!')));
                     Navigator.of(context).pop(); // Tutup dialog edit

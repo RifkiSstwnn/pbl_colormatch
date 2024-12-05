@@ -102,9 +102,8 @@ class InfoScreen extends StatelessWidget {
                 if (confirm) {
                   // Hapus data aplikasi
                   SharedPreferences prefs =
-                      await SharedPreferences.getInstance();
-                  await userService
-                      .deleteUser(); // Hapus data user dari backend
+                  await SharedPreferences.getInstance();
+                  await userService.deleteUser(); // Hapus data user dari backend
                   await prefs.clear(); // Hapus data lokal
 
                   // Keluar dari aplikasi
