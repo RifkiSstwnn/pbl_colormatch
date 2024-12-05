@@ -26,7 +26,7 @@ class HistoryService {
     }
   }
 
-  Future<bool> editName(int id, String newName) async {
+  Future<bool> editName(String id, String newName) async {
     final response = await http.put(
       Uri.parse('$baseUrl/history/edit_name/$id'),
       headers: {'Content-Type': 'application/json'},

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pbl_colormatch/services/history_service.dart';
+import '../models/history_model.dart';
 import 'result.dart';
 import 'dart:convert';
 import 'package:google_fonts/google_fonts.dart'; // Import Google Fonts
@@ -110,112 +111,115 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   Widget _buildHistoryItem(
-      BuildContext context, Map<String, dynamic> historyData) {
-    int id = historyData['id'];
-    List<Color> colorPalette = _parseColorPalette(historyData['color_palette']);
+    BuildContext context, Map<String, dynamic> historyData) {
+  int id = historyData['id'];
+  List<Color> colorPalette = _parseColorPalette(historyData['color_palette']);
 
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 7, horizontal: 20),
-      elevation: 0, // Remove shadow
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      color: Colors.white,
-      child: InkWell(
-        onTap: () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return ResultDialog(latestHistory: historyData);
-            },
-          );
-        },
-        child: Container(
-          height: 140,
-          padding: const EdgeInsets.all(10),
-          child: Stack(
-            children: [
-              Positioned(
-                left: 30,
-                top: 18,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      children: [
-                        ClipOval(
-                          child: Image.network(
-                            historyData['foto_output'] ?? '',
-                            width: 70,
-                            height: 70,
-                            fit: BoxFit.cover,
-                            errorBuilder: (BuildContext context, Object error,
-                                StackTrace? stackTrace) {
-                              return const SizedBox(
-                                height: 70,
-                                width: 70,
-                                child: Center(
-                                    child: Text('Image could not be loaded')),
-                              );
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 5),
-                        Text(
-                          historyData['name'] ?? 'Unknown',
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(width: 35),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          historyData['skin_tone'] ?? 'Unknown Skin Tone',
-                          style: const TextStyle(
-                            fontSize: 20,
-                            color: Color.fromARGB(255, 6, 6, 6),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 30),
-                        Row(
-                          children: colorPalette.take(5).map((color) {
-                            return Container(
-                              width: 30,
-                              height: 30,
-                              margin: const EdgeInsets.only(right: 5),
-                              decoration: BoxDecoration(
-                                color: color,
-                                shape: BoxShape.circle,
-                              ),
+  return Card(
+    margin: const EdgeInsets.symmetric(vertical: 7, horizontal: 20),
+    elevation: 0,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+    color: Colors.white,
+    child: InkWell(
+      onTap: () {
+        // Mengonversi Map<String, dynamic> ke objek History
+        History history = History.fromJson(historyData);
+
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return ResultDialog(latestHistory: history);
+          },
+        );
+      },
+      child: Container(
+        height: 140,
+        padding: const EdgeInsets.all(10),
+        child: Stack(
+          children: [
+            Positioned(
+              left: 30,
+              top: 18,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    children: [
+                      ClipOval(
+                        child: Image.network(
+                          historyData['foto_output'] ?? '',
+                          width: 70,
+                          height: 70,
+                          fit: BoxFit.cover,
+                          errorBuilder: (BuildContext context, Object error,
+                              StackTrace? stackTrace) {
+                            return const SizedBox(
+                              height: 70,
+                              width: 70,
+                              child: Center(
+                                  child: Text('Image could not be loaded')),
                             );
-                          }).toList(),
+                          },
                         ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        historyData['name'] ?? 'Unknown',
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: 35),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        historyData['skin_tone'] ?? 'Unknown Skin Tone',
+                        style: const TextStyle(
+                          fontSize: 20,
+                          color: Color.fromARGB(255, 6, 6, 6),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                      Row(
+                        children: colorPalette.take(5).map((color) {
+                          return Container(
+                            width: 30,
+                            height: 30,
+                            margin: const EdgeInsets.only(right: 5),
+                            decoration: BoxDecoration(
+                              color: color,
+                              shape: BoxShape.circle,
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              Positioned(
-                right: 20,
-                top: 13,
-                child: IconButton(
-                  icon: const Icon(Icons.delete, color: Color(0xFF235F60)),
-                  onPressed: () => _deleteHistory(context, id),
-                ),
+            ),
+            Positioned(
+              right: 20,
+              top: 13,
+              child: IconButton(
+                icon: const Icon(Icons.delete, color: Color(0xFF235F60)),
+                onPressed: () => _deleteHistory(context, id),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   void _toggleSearch() {
     setState(() {

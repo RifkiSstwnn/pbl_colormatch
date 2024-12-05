@@ -4,8 +4,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:pbl_colormatch/services/upload_service.dart';
 import 'package:pbl_colormatch/services/result_service.dart';
 import 'package:camera/camera.dart';
-import 'camera/takepicture_screen.dart';
-import 'package:pbl_colormatch/screens/result.dart';
+import '../models/history_model.dart';
+import 'takepicture_screen.dart';
+import 'package:pbl_colormatch/views/result.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CameraScreen extends StatefulWidget {
@@ -127,7 +128,8 @@ class _CameraScreenState extends State<CameraScreen> {
               ),
               style: OutlinedButton.styleFrom(
                 minimumSize: const Size(100, 60),
-                side: const BorderSide(color: Color(0xFF235F60)), // Border color
+                side:
+                    const BorderSide(color: Color(0xFF235F60)), // Border color
                 backgroundColor: Colors.white, // Button background color
               ),
             ),
@@ -144,7 +146,8 @@ class _CameraScreenState extends State<CameraScreen> {
               ),
               style: OutlinedButton.styleFrom(
                 minimumSize: const Size(100, 60),
-                side: const BorderSide(color: Color(0xFF235F60)), // Border color
+                side:
+                    const BorderSide(color: Color(0xFF235F60)), // Border color
                 backgroundColor: Colors.white, // Button background color
               ),
             ),
@@ -229,9 +232,12 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   void _showResultDialog(Map<String, dynamic> result) {
+    History history = History.fromJson(result); // Pastikan ini benar
+
     showDialog(
       context: context,
-      builder: (context) => ResultDialog(latestHistory: result),
+      builder: (context) => ResultDialog(
+          latestHistory: history), // Menggunakan konstruktor dengan parameter
     );
   }
 
@@ -240,7 +246,8 @@ class _CameraScreenState extends State<CameraScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Upload Gagal'),
-        content: const Text('Gambar tidak valid. Silakan ambil gambar kembali.'),
+        content:
+            const Text('Gambar tidak valid. Silakan ambil gambar kembali.'),
         actions: [
           TextButton(
             onPressed: () {

@@ -2,7 +2,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:pbl_colormatch/services/upload_service.dart';
 import 'package:pbl_colormatch/services/result_service.dart';
-import 'package:pbl_colormatch/screens/result.dart';
+import 'package:pbl_colormatch/views/result.dart';
+
+import '../models/history_model.dart';
 
 class DisplayPictureScreen extends StatefulWidget {
   final String imagePath;
@@ -95,13 +97,16 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   }
 
   void _navigateToResultScreen(Map<String, dynamic> latestHistory) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return ResultDialog(latestHistory: latestHistory);
-      },
-    );
-  }
+  // Mengonversi Map<String, dynamic> ke objek History
+  History history = History.fromJson(latestHistory);
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return ResultDialog(latestHistory: history);
+    },
+  );
+}
 
   void _showUploadFailedDialog() {
     showDialog(
