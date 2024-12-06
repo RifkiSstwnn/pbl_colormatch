@@ -71,37 +71,34 @@ class _HomePageState extends State<HomePage> {
     bool isSelected = _currentIndex == index;
 
     return AnimatedContainer(
-      duration: Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-      width: isSelected ? 80 : 60,
+      duration: Duration(milliseconds: 90),
+      width: isSelected ? 100 : 60,
       padding: EdgeInsets.symmetric(horizontal: 5.0),
       decoration: BoxDecoration(
         color: isSelected ? const Color(0xFF235F60) : Colors.transparent,
-        borderRadius: BorderRadius.circular(50),
+        borderRadius: BorderRadius.circular(60),
       ),
       child: Container(
-        // New container for padding
-        padding: EdgeInsets.symmetric(vertical: 4.0), // Add vertical padding
+        padding: EdgeInsets.symmetric(vertical: 4.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               icon,
-              size: 20,
+              size: 30,
               color: isSelected ? Color(0xffb1e33d) : Colors.grey,
             ),
-            if (isSelected)
-              Padding(
-                padding: const EdgeInsets.only(top: 5.0),
-                child: Text(
-                  _titles[index],
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 13,
-                  ),
+            Padding(
+              padding: const EdgeInsets.only(top: 5.0),
+              child: Text(
+                _titles[index],
+                style: TextStyle(
+                  color: isSelected ? Colors.white : Colors.grey,
+                  fontSize: 13,
                 ),
               ),
+            ),
           ],
         ),
       ),
