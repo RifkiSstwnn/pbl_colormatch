@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:pbl_colormatch/utils/getUUID.dart'; // Import UUIDService
 
 class HistoryService {
-  final String baseUrl = 'http://192.168.17.94:5000'; // URL dasar untuk API
+  final String baseUrl = 'http://192.168.18.20:5000'; // URL dasar untuk API
   final UUIDService uuidService = UUIDService(); // Instance dari UUIDService
 
   Future<List<dynamic>?> getHistory() async {

@@ -20,7 +20,7 @@ class User {
 class UserService {
   final UUIDService uuidService = UUIDService();
   final String Url =
-      'http://192.168.17.94:5000'; // Ganti dengan URL endpoint Flask
+      'http://192.168.18.20:5000'; // Ganti dengan URL endpoint Flask
 
   // Fungsi untuk menambahkan user baru
   Future<void> addUser(User user) async {

@@ -41,7 +41,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             'Confirm',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
-          content: const Text('Are you sure you want to delete this history?'),
+          content: const Text('Apakah Kamu yakin ingin menghapus?'),
           actions: [
             OutlinedButton(
               onPressed: () => Navigator.of(context).pop(false),
@@ -74,13 +74,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
           setState(() {
             _historyFuture = _historyService.getHistory();
           });
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('History deleted successfully')),
-          );
+          _showSuccessDialog(context, 'Berhasil Mengahpus History');
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Failed to delete history')),
-          );
+          _showErrorDialog(context, 'Gagal Mengahpus History');
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -254,11 +250,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       .toString()
                       .toLowerCase()
                       .contains(_searchQuery.toLowerCase());
-                  final skinToneMatches = history['skin_tone']
-                      .toString()
-                      .toLowerCase()
-                      .contains(_searchQuery.toLowerCase());
-                  return nameMatches || skinToneMatches;
+                  // final skinToneMatches = history['skin_tone']
+                  //     .toString()
+                  //     .toLowerCase()
+                  //     .contains(_searchQuery.toLowerCase());
+                  return nameMatches;
                 }).toList();
 
           return Stack(
@@ -391,6 +387,46 @@ class _HistoryScreenState extends State<HistoryScreen> {
   void dispose() {
     _searchFocusNode.dispose(); // Dispose of the FocusNode
     super.dispose();
+  }
+
+  void _showSuccessDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Berhasil'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showErrorDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Gagal'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Coba Lagi'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
