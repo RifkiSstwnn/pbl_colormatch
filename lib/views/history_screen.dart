@@ -74,9 +74,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
           setState(() {
             _historyFuture = _historyService.getHistory();
           });
-          _showSuccessDialog(context, 'Berhasil Mengahpus History');
+          _showSuccessDialog(context, 'Berhasil Menghapus History');
         } else {
-          _showErrorDialog(context, 'Gagal Mengahpus History');
+          _showErrorDialog(context, 'Gagal Menghapus History');
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -106,6 +106,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
     return [];
   }
 
+  void _updateHistoryName(int id, String newName) {
+    setState(() {
+      _historyFuture.then((historyList) {
+        for (var history in historyList!) {
+          if (history['id'] == id) {
+            history['name'] = newName;
+          }
+        }
+      });
+    });
+  }
+
   Widget _buildHistoryItem(
       BuildContext context, Map<String, dynamic> historyData) {
     int id = historyData['id'];
@@ -120,24 +132,26 @@ class _HistoryScreenState extends State<HistoryScreen> {
       color: Colors.white,
       child: InkWell(
         onTap: () {
-          // Mengonversi Map<String, dynamic> ke objek History
           History history = History.fromJson(historyData);
 
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              return ResultDialog(latestHistory: history);
+              return ResultDialog(
+                latestHistory: history,
+                onNameUpdated: (newName) => _updateHistoryName(id, newName),
+              );
             },
           );
         },
         child: Container(
           height: 140,
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Stack(
             children: [
               Positioned(
-                left: 30,
-                top: 18,
+                left: 10,
+                top: 15,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -161,11 +175,16 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           ),
                         ),
                         const SizedBox(height: 5),
-                        Text(
-                          historyData['name'] ?? 'Unknown',
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                        SizedBox(
+                          width: 80,
+                          child: Text(
+                            historyData['name'] ?? 'Unknown',
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                           ),
                         ),
                       ],
@@ -203,8 +222,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 ),
               ),
               Positioned(
-                right: 20,
-                top: 13,
+                right: 0,
+                top: 5,
                 child: IconButton(
                   icon: const Icon(Icons.delete, color: Color(0xFF235F60)),
                   onPressed: () => _deleteHistory(context, id),
@@ -250,10 +269,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       .toString()
                       .toLowerCase()
                       .contains(_searchQuery.toLowerCase());
-                  // final skinToneMatches = history['skin_tone']
-                  //     .toString()
-                  //     .toLowerCase()
-                  //     .contains(_searchQuery.toLowerCase());
                   return nameMatches;
                 }).toList();
 
@@ -337,8 +352,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.normal,
-                                      fontFamily: GoogleFonts.poppins()
-                                          .fontFamily, // Ensure Poppins font is used
+                                      fontFamily:
+                                          GoogleFonts.poppins().fontFamily,
                                       color: Colors.black,
                                     ),
                                   ),
@@ -354,7 +369,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (BuildContext context, int index) {
-                        // Display a message if the history list is empty
                         if (filteredHistoryList.isEmpty) {
                           return const Center(
                             child: Padding(

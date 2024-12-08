@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:pbl_colormatch/utils/getUUID.dart'; // Import UUIDService
 
 class UploadService {
-  final String apiUrl = 'http://192.168.18.20:5000/upload_image';
+  final String apiUrl = 'http://192.168.0.107:5000/upload_image';
 
   // Fungsi untuk mengupload gambar
   Future<Map<String, dynamic>?> uploadImage(File file) async {

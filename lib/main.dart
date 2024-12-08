@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'services/user_service.dart';
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
       title: 'ColorMatch',
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.grey[100],
+        textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: HomePage(),

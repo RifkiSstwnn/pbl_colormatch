@@ -232,14 +232,22 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   void _showResultDialog(Map<String, dynamic> result) {
-    History history = History.fromJson(result); // Pastikan ini benar
+  History history = History.fromJson(result); // Ensure this conversion is correct
 
-    showDialog(
-      context: context,
-      builder: (context) => ResultDialog(
-          latestHistory: history), // Menggunakan konstruktor dengan parameter
-    );
-  }
+  showDialog(
+    context: context,
+    builder: (context) => ResultDialog(
+      latestHistory: history,
+      onNameUpdated: (newName) {
+        // Handle the name update logic here, if needed
+        setState(() {
+          // Update logic if you need to reflect the change
+          history.name = newName; // Example of updating the name
+        });
+      },
+    ),
+  );
+}
 
   void _showUploadFailedDialog() {
     showDialog(

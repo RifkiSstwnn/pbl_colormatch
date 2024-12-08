@@ -32,6 +32,17 @@ class _HomePageState extends State<HomePage> {
     Icons.info,
   ];
 
+  double _calculateWidth(String title) {
+    final textPainter = TextPainter(
+      text: TextSpan(
+        text: title,
+        style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    return textPainter.width + 16;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,10 +50,7 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(left: 2.0, right: 2.0, bottom: 1.0),
         child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-          ),
+          decoration: const BoxDecoration(color: Colors.white),
           child: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             currentIndex: _currentIndex,
@@ -69,38 +77,39 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildBottomNavIcon(IconData icon, int index) {
     bool isSelected = _currentIndex == index;
+    double iconWidth = isSelected ? _calculateWidth(_titles[index]) : 60;
 
     return AnimatedContainer(
-      duration: Duration(milliseconds: 90),
-      width: isSelected ? 100 : 60,
-      padding: EdgeInsets.symmetric(horizontal: 5.0),
-      decoration: BoxDecoration(
-        color: isSelected ? const Color(0xFF235F60) : Colors.transparent,
-        borderRadius: BorderRadius.circular(60),
-      ),
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 4.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
+      duration: Duration(milliseconds: 300),
+      width: iconWidth,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: EdgeInsets.all(10.0),
+            decoration: BoxDecoration(
+              color: isSelected ? const Color(0xFF235F60) : Colors.transparent,
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Icon(
               icon,
-              size: 30,
+              size: 20,
               color: isSelected ? Color(0xffb1e33d) : Colors.grey,
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 5.0),
-              child: Text(
-                _titles[index],
-                style: TextStyle(
-                  color: isSelected ? Colors.white : Colors.grey,
-                  fontSize: 13,
-                ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 5.0),
+            child: Text(
+              _titles[index],
+              style: TextStyle(
+                color: isSelected ? Colors.grey : Colors.grey,
+                fontSize: 13,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
