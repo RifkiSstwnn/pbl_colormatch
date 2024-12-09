@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: _pages[_currentIndex],
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(left: 2.0, right: 2.0, bottom: 1.0),
+        padding: const EdgeInsets.only(left: 2.0, right: 2.0, bottom: 0),
         child: Container(
           decoration: const BoxDecoration(color: Colors.white),
           child: BottomNavigationBar(
@@ -94,12 +94,12 @@ class _HomePageState extends State<HomePage> {
             ),
             child: Icon(
               icon,
-              size: 20,
+              size: 26,
               color: isSelected ? Color(0xffb1e33d) : Colors.grey,
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 5.0),
+            padding: const EdgeInsets.only(top: 0),
             child: Text(
               _titles[index],
               style: TextStyle(

@@ -4,6 +4,7 @@ import 'package:pbl_colormatch/services/upload_service.dart';
 import 'package:pbl_colormatch/services/result_service.dart';
 import 'package:pbl_colormatch/views/result.dart';
 import '../models/history_model.dart';
+import 'package:pbl_colormatch/views/home_screen.dart';
 
 class DisplayPictureScreen extends StatefulWidget {
   final String imagePath;
@@ -40,17 +41,56 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            // Tombol Batal dengan Icon tanpa Text
             IconButton(
-              icon: const Icon(Icons.close, color: Colors.red),
               onPressed: () {
                 Navigator.pop(context);
               },
+              icon: const Icon(Icons.close, color: Colors.red),
+              tooltip: 'Batal',
             ),
-            IconButton(
-              icon: const Icon(Icons.check, color: Colors.green),
-              onPressed: () {
-                _uploadImage(File(widget.imagePath));
-              },
+
+            // Tombol Analisis dengan Container dan Rounded Corners
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.green,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: TextButton(
+                onPressed: () {
+                  _uploadImage(File(widget.imagePath));
+                },
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  child: Text(
+                    'Analisis',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+              ),
+            ),
+
+            // Tombol Lihat History dengan Container dan Rounded Corners
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()),
+                  );
+                },
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  child: Text(
+                    'Lihat History',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
@@ -115,7 +155,8 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Upload Gagal'),
-        content: const Text('Gambar tidak valid. Silakan ambil gambar kembali.'),
+        content:
+            const Text('Gambar tidak valid. Silakan ambil gambar kembali.'),
         actions: [
           TextButton(
             onPressed: () {

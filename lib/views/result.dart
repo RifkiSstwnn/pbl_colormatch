@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pbl_colormatch/views/home_screen.dart';
 import '../models/history_model.dart';
 import '../services/history_service.dart';
 import 'package:screenshot/screenshot.dart';
@@ -89,7 +90,7 @@ class _ResultDialogState extends State<ResultDialog> {
                       const Text('Color Palette:'),
                       const SizedBox(height: 10),
                       Wrap(
-                        spacing: 8.0,
+                        spacing: 6.0,
                         runSpacing: 8.0,
                         children:
                             widget.latestHistory.colorPalette.map((color) {
@@ -163,7 +164,7 @@ class _ResultDialogState extends State<ResultDialog> {
   void _showEditNameDialog(BuildContext context) {
     final TextEditingController nameController =
         TextEditingController(text: widget.latestHistory.name);
-
+    Navigator.of(context).pop();
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -186,8 +187,8 @@ class _ResultDialogState extends State<ResultDialog> {
                   if (success) {
                     widget.onNameUpdated(
                         newName); // Call the callback to update the name
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text('Name updated successfully!')));
+                    _showSuccessDialogEditName(
+                        context, 'Nama Berhasil diperbarui.');
                   } else {
                     _showErrorDialog(context, 'Gagal memperbarui nama.');
                   }
@@ -280,8 +281,7 @@ class _ResultDialogState extends State<ResultDialog> {
     );
   }
 
-  void _showSuccessDialogEditName(
-      BuildContext context, String message, VoidCallback onReload) {
+  void _showSuccessDialogEditName(BuildContext context, String message) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -291,10 +291,14 @@ class _ResultDialogState extends State<ResultDialog> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
-                onReload(); // Panggil callback untuk reload halaman
+                Navigator.of(context).pop(); // Tutup dialog
+                // Navigator.pushAndRemoveUntil(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => HomePage()),
+                //   (Route<dynamic> route) => false,
+                // );
               },
-              style: ElevatedButton.styleFrom(
+              style: TextButton.styleFrom(
                 foregroundColor: Colors.white,
                 backgroundColor: const Color(0xFF235F60),
               ),
