@@ -25,6 +25,28 @@ class SkinToneDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Text(
+          season,
+          style: GoogleFonts.poppins(
+            color: Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+      ),
       body: DefaultTabController(
         length: 2,
         child: Column(
@@ -150,14 +172,21 @@ class SkinToneDetailScreen extends StatelessWidget {
       runSpacing: 10,
       children: List.generate(colors.length, (index) {
         return Container(
-          width: 50,
-          height: 50,
+          width: 60,
+          height: 40,
           decoration: BoxDecoration(
             color: colors[index],
-            shape: BoxShape.circle,
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 4,
+                offset: const Offset(2, 2),
+              ),
+            ],
             border: Border.all(
-              color: Colors.black,
-              width: 2,
+              color: Colors.grey.shade400,
+              width: 1,
             ),
           ),
         );
