@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
       ),
       textDirection: TextDirection.ltr,
     )..layout();
-    return textPainter.width + 16;
+    return textPainter.width + 23;
   }
 
   @override

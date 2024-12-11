@@ -41,7 +41,7 @@ class HistoryService {
     }
   }
 
-  // Menambahkan metode untuk menghapus history
+  // menghapus history
   Future<bool> deleteHistory(int id) async {
     final response = await http.delete(
       Uri.parse('$baseUrl/history/delete/$id'),

@@ -11,20 +11,27 @@ class DetailInfoScreen extends StatelessWidget {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          // SliverAppBar menyerupai WhatsApp
+          // SliverAppBar yang lebih rapi
           SliverAppBar(
-            expandedHeight: 90.0,
+            expandedHeight: 48.0,
             floating: false,
-            pinned: true, // Tetap di atas saat di-scroll
+            pinned: true,
             backgroundColor: Colors.white,
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text(
-                title,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              titlePadding: const EdgeInsets.only(left: 16, bottom: 16),
-              centerTitle: false,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () {
+                Navigator.pop(context); // Tombol back
+              },
             ),
+            title: Text(
+              title,
+              style: const TextStyle(
+                fontSize: 19,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+            centerTitle: false,
           ),
           // Konten detail deskripsi
           SliverToBoxAdapter(
