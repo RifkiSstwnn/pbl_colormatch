@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
-import 'services/user_service.dart';
-import 'views/home_screen.dart';
+import 'services/user_service.dart'; // Import service user
+import 'views/home_screen.dart'; // Import home screen
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +23,11 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomePage(),
+      initialRoute: '/', // Initial route
+      routes: {
+        '/': (context) => const SplashScreen(), // Splash Screen
+        '/home': (context) => HomePage(), // Home Page
+      },
     );
   }
 }
@@ -39,33 +43,39 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _checkAndGenerateUUID();
+    _checkAndGenerateUUID(); // Panggil fungsi pengecekan UUID
   }
 
+  // Fungsi untuk mengecek atau generate UUID
   Future<void> _checkAndGenerateUUID() async {
     try {
-      await Future.delayed(
-          const Duration(seconds: 2)); // Delay untuk splash screen
+      await Future.delayed(const Duration(seconds: 2)); // Delay splash screen
 
-      if (!mounted) return;
+      if (!mounted) return; // Cek jika widget masih dipasang
       final prefs = await SharedPreferences.getInstance();
-      String? uuid = prefs.getString('userUUID');
+      String? uuid =
+          prefs.getString('userUUID'); // Ambil UUID dari local storage
       UserService userService = UserService();
 
       if (uuid == null) {
         // Generate UUID jika belum ada
         uuid = const Uuid().v4();
-        await prefs.setString('userUUID', uuid);
+        await prefs.setString(
+            'userUUID', uuid); // Simpan UUID di SharedPreferences
         print('New UUID generated: $uuid');
-        // Tambahkan user baru ke server
+
+        // Tambahkan user baru ke server (jika diperlukan)
         User newUser = User(uuid: uuid);
         await userService.addUser(newUser);
       } else {
+        // Cek user UUID di server
         await userService.cekUser(uuid);
+        print('UUID found: $uuid');
       }
+
       if (!mounted) return;
 
-      // Menggunakan named route untuk navigasi
+      // Navigasi ke HomePage
       Navigator.of(context).pushReplacementNamed('/home');
     } catch (e) {
       print('Error in _checkAndGenerateUUID: $e');
@@ -76,26 +86,6 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     backgroundColor: Colors.white,
-  //     body: Center(
-  //       child: Column(
-  //         mainAxisAlignment: MainAxisAlignment.center,
-  //         children: [
-  //           Image.asset(
-  //             'assets/logo1.png', // Use your logo image path
-  //             height: 100, // Adjust height as needed
-  //           ),
-  //           // const SizedBox(height: 50),
-  //           const CircularProgressIndicator(),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
@@ -104,50 +94,17 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(
-                  Color(0xFF235F60)), // Custom color
+            SizedBox(height: 20),
+            Text(
+              'Colormatch',
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 66, 170, 255)),
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-// Contoh implementasi halaman-halaman lain
-class SettingsPage extends StatelessWidget {
-  const SettingsPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
-      body: const Center(child: Text('Settings Page')),
-    );
-  }
-}
-
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
-      body: const Center(child: Text('Profile Page')),
-    );
-  }
-}
-
-class FavoritesPage extends StatelessWidget {
-  const FavoritesPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Favorites')),
-      body: const Center(child: Text('Favorites Page')),
     );
   }
 }
