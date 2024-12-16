@@ -96,11 +96,13 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             SizedBox(height: 20),
             Text(
-              'Colormatch',
+              'ColorMatch',
               style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 66, 170, 255)),
+                fontFamily: 'Poppins',
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF235F60),
+              ),
             ),
           ],
         ),
